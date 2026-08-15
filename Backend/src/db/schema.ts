@@ -10,16 +10,17 @@ import {
 } from 'drizzle-orm/pg-core';
 
 export const roleEnum = pgEnum('user_role', ['user', 'admin']);
-
+export const paymentStatusEnum = pgEnum('paymentStatus', ['pending' ,'confirmed' ,'delivered' ,'cancelled'])
 // ------------------------------------------------------------------
 // جدول کاربران
 // ------------------------------------------------------------------
 export const users = pgTable('users', {
   id: serial('id').primaryKey(),
-  name: varchar('name', { length: 100 }).notNull(),
-  email: varchar('email', { length: 150 }).notNull().unique(),
-  password: varchar('password', { length: 255 }).notNull(), // به‌صورت هش‌شده ذخیره می‌شود
-  phone: varchar('phone', { length: 20 }),
+  phone: varchar('phone', { length: 11 }).notNull(),
+  password: varchar('password', { length: 20 }).notNull(), // به‌صورت هش‌شده ذخیره می‌شود
+  firstName: varchar('first_name', { length: 100 }).notNull(),
+  lastName: varchar('last_name', { length: 100 }).notNull(),
+  address: varchar('address', {length: 255}),
   role: roleEnum('role').default('user').notNull(),
   createdAt: timestamp('created_at').defaultNow().notNull(),
 });
@@ -57,9 +58,9 @@ export const parts = pgTable('parts', {
 export const orders = pgTable('orders', {
   id: serial('id').primaryKey(),
   userId: integer('user_id').references(() => users.id).notNull(),
-  status: varchar('status', { length: 20 }).default('pending').notNull(), // pending / confirmed / delivered / cancelled
+  status: paymentStatusEnum('status').default('pending').notNull(),
   totalAmount: integer('total_amount').default(0).notNull(), // مبلغ کل به تومان
-  address: text('address'),
+  address: text('address').notNull(),
   createdAt: timestamp('created_at').defaultNow().notNull(),
 });
 

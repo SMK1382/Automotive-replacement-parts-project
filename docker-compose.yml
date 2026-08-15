@@ -1,0 +1,38 @@
+# این فایل دیتابیس PostgreSQL را با Docker بالا می‌آورد.
+# برای اجرا: docker compose up -d
+# برای توقف: docker compose down
+
+services:
+  # سرویس اصلی دیتابیس PostgreSQL
+  db:
+    image: postgres:16-alpine
+    container_name: parts_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: parts_user
+      POSTGRES_PASSWORD: parts_pass
+      POSTGRES_DB: parts_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    # بررسی سلامت دیتابیس تا زمان آماده شدن صبر کنیم
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U parts_user -d parts_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # (اختیاری) یک رابط وب ساده برای دیدن جداول دیتابیس
+  # آدرس: http://localhost:8080  -  ورود با parts_user / parts_pass / parts_db
+  adminer:
+    image: adminer
+    container_name: parts_adminer
+    restart: unless-stopped
+    depends_on:
+      - db
+    ports:
+      - "8080:8080"
+
+volumes:
+  pgdata:
