@@ -11,9 +11,8 @@ import {
 
 export const roleEnum = pgEnum('user_role', ['user', 'admin']);
 export const paymentStatusEnum = pgEnum('paymentStatus', ['pending' ,'confirmed' ,'delivered' ,'cancelled'])
-// ------------------------------------------------------------------
-// جدول کاربران
-// ------------------------------------------------------------------
+
+
 export const users = pgTable('users', {
   id: serial('id').primaryKey(),
   phone: varchar('phone', { length: 11 }).notNull(),
@@ -25,18 +24,14 @@ export const users = pgTable('users', {
   createdAt: timestamp('created_at').defaultNow().notNull(),
 });
 
-// ------------------------------------------------------------------
-// جدول دسته‌بندی قطعات (مثلاً: موتور، ترمز، تعلیق، برق)
-// ------------------------------------------------------------------
+
 export const categories = pgTable('categories', {
   id: serial('id').primaryKey(),
   name: varchar('name', { length: 100 }).notNull(),
   createdAt: timestamp('created_at').defaultNow().notNull(),
 });
 
-// ------------------------------------------------------------------
-// جدول قطعات
-// ------------------------------------------------------------------
+
 export const parts = pgTable('parts', {
   id: serial('id').primaryKey(),
   name: varchar('name', { length: 150 }).notNull(),
@@ -67,13 +62,13 @@ export const orders = pgTable('orders', {
 // ------------------------------------------------------------------
 // جدول آیتم‌های هر سفارش (هر سفارش می‌تواند چند قطعه داشته باشد)
 // ------------------------------------------------------------------
-export const orderItems = pgTable('order_items', {
-  id: serial('id').primaryKey(),
-  orderId: integer('order_id').references(() => orders.id).notNull(),
-  partId: integer('part_id').references(() => parts.id).notNull(),
-  quantity: integer('quantity').default(1).notNull(),
-  price: integer('price').notNull(), // قیمت قطعه در لحظه ثبت سفارش
-});
+// export const orderItems = pgTable('order_items', {
+//   id: serial('id').primaryKey(),
+//   orderId: integer('order_id').references(() => orders.id).notNull(),
+//   partId: integer('part_id').references(() => parts.id).notNull(),
+//   quantity: integer('quantity').default(1).notNull(),
+//   price: integer('price').notNull(), // قیمت قطعه در لحظه ثبت سفارش
+// });
 
 // ===================================================================
 // روابط بین جداول (برای استفاده در db.query و join خودکار)

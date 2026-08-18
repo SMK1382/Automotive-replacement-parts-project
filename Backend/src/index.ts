@@ -13,7 +13,7 @@ app.get('/', (req, res) =>{
 })
 
 
-const Port = Number(process.env.Port) || 4000
+const Port = Number(process.env.PORT) || 4000
 
 app.listen(Port, () =>{
     console.log(`Start server on port ${Port}`);
