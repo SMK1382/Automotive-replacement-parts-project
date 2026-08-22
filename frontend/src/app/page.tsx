@@ -34,10 +34,10 @@ export default function HomePage() {
       {/* بخش معرفی */}
       <section className={styles.hero}>
         <div className={styles.heroContent}>
-          <h1 className={styles.heroTitle}>قطعات اصل خودروهای تویوتا</h1>
+          <h1 className={styles.heroTitle}>Yadak Expert</h1>
           <p className={styles.heroText}>
             فروشگاه آنلاین قطعات یدکی با کیفیت تضمینی و ارسال سریع به سراسر
-            کشور. مدل‌های کرولا، کمری، یاریس، راو۴ و هیلوکس.
+            تهران 
           </p>
           <Link href="/parts" className="btn btn-primary btn-large">
             مشاهده قطعات

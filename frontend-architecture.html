@@ -1,0 +1,919 @@
+<title>معماری فرانت‌اند فروشگاه قطعات</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap">
+
+<style>
+  :root {
+    --bg: #f1f5f9;
+    --surface: #ffffff;
+    --surface-2: #f8fafc;
+    --text: #1e293b;
+    --heading: #0a2540;
+    --muted: #5b6b80;
+    --border: #dbe3ec;
+    --accent: #2563eb;
+    --accent-strong: #1d4ed8;
+    --accent-soft: #e4edfd;
+    --ok: #15803d;
+    --warn: #b45309;
+    --danger: #be123c;
+    --code-bg: #0d1f33;
+    --code-text: #d7e4f2;
+    --code-key: #8fb8f5;
+    --code-str: #9fd6a8;
+    --code-com: #6d87a3;
+    --shadow: 0 1px 2px rgb(10 37 64 / 0.06), 0 8px 24px -12px rgb(10 37 64 / 0.12);
+    --radius: 12px;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #0a1422;
+      --surface: #102034;
+      --surface-2: #0d1a2b;
+      --text: #d9e3f0;
+      --heading: #eaf2fc;
+      --muted: #8ea3bd;
+      --border: #223650;
+      --accent: #6aa4f2;
+      --accent-strong: #8ab8f7;
+      --accent-soft: #16263e;
+      --ok: #57c98a;
+      --warn: #e7b45c;
+      --danger: #f28aa2;
+      --code-bg: #0b1a2c;
+      --code-com: #5d7691;
+      --shadow: 0 1px 2px rgb(0 0 0 / 0.4), 0 10px 30px -12px rgb(0 0 0 / 0.5);
+    }
+  }
+
+  :root[data-theme="dark"] {
+    --bg: #0a1422;
+    --surface: #102034;
+    --surface-2: #0d1a2b;
+    --text: #d9e3f0;
+    --heading: #eaf2fc;
+    --muted: #8ea3bd;
+    --border: #223650;
+    --accent: #6aa4f2;
+    --accent-strong: #8ab8f7;
+    --accent-soft: #16263e;
+    --ok: #57c98a;
+    --warn: #e7b45c;
+    --danger: #f28aa2;
+    --code-bg: #0b1a2c;
+    --code-com: #5d7691;
+    --shadow: 0 1px 2px rgb(0 0 0 / 0.4), 0 10px 30px -12px rgb(0 0 0 / 0.5);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    * { transition: none !important; }
+  }
+
+  body {
+    direction: rtl;
+    font-family: "Vazirmatn", "Segoe UI", Tahoma, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.95;
+    font-size: 1rem;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  code, kbd, .mono {
+    font-family: "JetBrains Mono", ui-monospace, "Cascadia Mono", Menlo, monospace;
+  }
+
+  a { color: var(--accent-strong); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 4px; }
+
+  .page { max-width: 56rem; margin: 0 auto; padding: 0 1.25rem 5rem; }
+
+  /* ---------- سربرگ سند ---------- */
+  .doc-header {
+    padding: 3rem 0 1.75rem;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 2rem;
+  }
+  .eyebrow {
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    color: var(--accent-strong);
+    margin-bottom: 0.6rem;
+  }
+  .doc-header h1 {
+    color: var(--heading);
+    font-size: clamp(1.65rem, 3.2vw, 2.25rem);
+    font-weight: 800;
+    line-height: 1.45;
+    text-wrap: balance;
+    margin-bottom: 0.65rem;
+  }
+  .doc-header .lede {
+    color: var(--muted);
+    max-width: 42rem;
+    font-size: 1.02rem;
+  }
+  .meta-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 1.25rem;
+  }
+  .chip {
+    font-family: "JetBrains Mono", monospace;
+    direction: ltr;
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--heading);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 0.22rem 0.75rem;
+    box-shadow: var(--shadow);
+  }
+
+  /* ---------- فهرست مطالب ---------- */
+  .toc {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.15rem 1.4rem;
+    margin-bottom: 2.75rem;
+    box-shadow: var(--shadow);
+  }
+  .toc-title { font-size: 0.85rem; font-weight: 700; color: var(--muted); margin-bottom: 0.6rem; }
+  .toc ol {
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
+    gap: 0.15rem 1.5rem;
+  }
+  .toc a {
+    color: var(--text);
+    font-size: 0.92rem;
+    display: block;
+    padding: 0.15rem 0;
+  }
+  .toc a:hover { color: var(--accent-strong); text-decoration: none; }
+  .toc .toc-num {
+    font-family: "JetBrains Mono", monospace;
+    color: var(--muted);
+    font-size: 0.78rem;
+    margin-left: 0.45rem;
+  }
+
+  /* ---------- بخش‌ها ---------- */
+  section { margin-bottom: 3.25rem; scroll-margin-top: 1.5rem; }
+  .sec-head { margin-bottom: 1.15rem; }
+  .sec-head .eyebrow { margin-bottom: 0.25rem; }
+  h2 {
+    color: var(--heading);
+    font-size: 1.4rem;
+    font-weight: 800;
+    line-height: 1.5;
+    text-wrap: balance;
+  }
+  h3 {
+    color: var(--heading);
+    font-size: 1.06rem;
+    font-weight: 700;
+    margin: 1.6rem 0 0.7rem;
+  }
+  p { margin-bottom: 0.9rem; }
+  p:last-child { margin-bottom: 0; }
+  ul.plain { list-style: none; display: grid; gap: 0.45rem; margin-bottom: 0.9rem; }
+  ul.plain li { position: relative; padding-right: 1.15rem; }
+  ul.plain li::before {
+    content: "";
+    position: absolute;
+    right: 0;
+    top: 0.85rem;
+    width: 0.45rem;
+    height: 0.45rem;
+    border-radius: 2px;
+    background: var(--accent);
+    opacity: 0.75;
+  }
+  .muted { color: var(--muted); }
+  code.inline {
+    direction: ltr;
+    unicode-bidi: embed;
+    font-size: 0.82em;
+    background: var(--accent-soft);
+    color: var(--heading);
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    padding: 0.08rem 0.4rem;
+    white-space: nowrap;
+  }
+
+  /* ---------- جدول‌ها ---------- */
+  .table-wrap {
+    overflow-x: auto;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--surface);
+    box-shadow: var(--shadow);
+    margin-bottom: 1rem;
+  }
+  table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+  th, td { padding: 0.6rem 0.9rem; text-align: right; vertical-align: top; }
+  thead th {
+    background: var(--surface-2);
+    color: var(--muted);
+    font-size: 0.78rem;
+    font-weight: 700;
+    border-bottom: 1px solid var(--border);
+    white-space: nowrap;
+  }
+  tbody tr + tr td { border-top: 1px solid var(--border); }
+  tbody code.inline { white-space: normal; }
+  td { font-variant-numeric: tabular-nums; }
+
+  /* ---------- چیپ متد HTTP ---------- */
+  .method {
+    direction: ltr;
+    display: inline-block;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    border-radius: 5px;
+    padding: 0.1rem 0.5rem;
+    white-space: nowrap;
+  }
+  .m-get { background: var(--accent-soft); color: var(--accent-strong); }
+  .m-post { background: color-mix(in srgb, var(--ok) 14%, transparent); color: var(--ok); }
+  .m-put, .m-patch { background: color-mix(in srgb, var(--warn) 15%, transparent); color: var(--warn); }
+  .m-del { background: color-mix(in srgb, var(--danger) 13%, transparent); color: var(--danger); }
+
+  /* ---------- بلوک کد ---------- */
+  pre.code {
+    direction: ltr;
+    text-align: left;
+    background: var(--code-bg);
+    color: var(--code-text);
+    border-radius: var(--radius);
+    padding: 1.1rem 1.25rem;
+    overflow-x: auto;
+    font-size: 0.8rem;
+    line-height: 1.75;
+    margin-bottom: 1rem;
+    box-shadow: var(--shadow);
+  }
+  pre.code code { font-size: inherit; }
+  .c-key { color: var(--code-key); }
+  .c-str { color: var(--code-str); }
+  .c-com { color: var(--code-com); }
+
+  /* ---------- کارت کامپوننت ---------- */
+  .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(16.5rem, 1fr)); gap: 1rem; margin-bottom: 1rem; }
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.15rem 1.25rem;
+    box-shadow: var(--shadow);
+  }
+  .card h4 { color: var(--heading); font-size: 1rem; font-weight: 700; margin-bottom: 0.35rem; }
+  .card .file {
+    direction: ltr;
+    unicode-bidi: embed;
+    display: block;
+    text-align: left;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.72rem;
+    color: var(--muted);
+    margin-bottom: 0.6rem;
+  }
+  .card p, .card li { font-size: 0.88rem; line-height: 1.85; }
+  .card ul { list-style: none; display: grid; gap: 0.25rem; }
+  .card li code.inline { font-size: 0.78rem; }
+
+  /* ---------- دیاگرام جریان ---------- */
+  .flow {
+    display: flex;
+    align-items: stretch;
+    gap: 0.6rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.25rem 1.1rem;
+    box-shadow: var(--shadow);
+    margin-bottom: 1rem;
+    overflow-x: auto;
+  }
+  .flow-box {
+    flex: 1 1 0;
+    min-width: 8.5rem;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: var(--surface-2);
+    padding: 0.8rem 0.7rem;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 0.2rem;
+  }
+  .flow-box .fb-label { font-size: 0.85rem; font-weight: 700; color: var(--heading); }
+  .flow-box .fb-sub {
+    direction: ltr;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.68rem;
+    color: var(--muted);
+  }
+  .flow-arrow {
+    align-self: center;
+    color: var(--accent);
+    font-size: 1.15rem;
+    font-weight: 700;
+    flex: 0 0 auto;
+  }
+  .flow-caption { font-size: 0.85rem; color: var(--muted); margin-bottom: 1rem; }
+
+  /* ---------- توالی شماره‌دار ---------- */
+  ol.seq {
+    list-style: none;
+    counter-reset: seq;
+    display: grid;
+    gap: 0.7rem;
+    margin-bottom: 1rem;
+  }
+  ol.seq li {
+    counter-increment: seq;
+    position: relative;
+    padding: 0.75rem 3rem 0.75rem 1rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    box-shadow: var(--shadow);
+    font-size: 0.92rem;
+  }
+  ol.seq li::before {
+    content: counter(seq);
+    position: absolute;
+    right: 0.9rem;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 1.6rem;
+    height: 1.6rem;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background: var(--accent-soft);
+    color: var(--accent-strong);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.8rem;
+    font-weight: 600;
+  }
+
+  /* ---------- کالاوت ---------- */
+  .callout {
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    border-right: 3px solid var(--accent);
+    background: var(--surface);
+    padding: 0.85rem 1.1rem;
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+    box-shadow: var(--shadow);
+  }
+  .callout.warn { border-right-color: var(--warn); }
+  .callout strong { color: var(--heading); }
+
+  .divider { border: none; border-top: 1px solid var(--border); margin: 2.5rem 0 0; }
+  .footnote { font-size: 0.82rem; color: var(--muted); margin-top: 1rem; }
+
+  @media (max-width: 34rem) {
+    .flow { flex-direction: column; }
+    .flow-arrow { transform: rotate(90deg); text-align: center; }
+  }
+</style>
+
+<div class="page" lang="fa" dir="rtl">
+
+  <header class="doc-header">
+    <div class="eyebrow">سند مرجع معماری</div>
+    <h1>معماری فرانت‌اند فروشگاه قطعات یدکی تویوتا</h1>
+    <p class="lede">
+      این سند نحوه عملکرد لایه فرانت‌اند پروژه را توضیح می‌دهد: از مسیریابی و رندر تا
+      احراز هویت، ارتباط با بک‌اند و سیستم استایل — بر پایه کد واقعی موجود در پوشه
+      <code class="inline">frontend/</code>.
+    </p>
+    <div class="meta-chips">
+      <span class="chip">Next.js 16.3</span>
+      <span class="chip">React 19.2</span>
+      <span class="chip">TypeScript 5</span>
+      <span class="chip">CSS Modules</span>
+      <span class="chip">JWT + localStorage</span>
+      <span class="chip">Vazirmatn / RTL</span>
+    </div>
+  </header>
+
+  <nav class="toc" aria-label="فهرست مطالب">
+    <div class="toc-title">فهرست مطالب</div>
+    <ol>
+      <li><a href="#overview"><span class="toc-num">۱</span>نمای کلی معماری</a></li>
+      <li><a href="#stack"><span class="toc-num">۲</span>پشته فناوری و تصمیم‌های اصلی</a></li>
+      <li><a href="#structure"><span class="toc-num">۳</span>ساختار پوشه‌ها</a></li>
+      <li><a href="#routing"><span class="toc-num">۴</span>مسیریابی و چیدمان‌های تودرتو</a></li>
+      <li><a href="#rendering"><span class="toc-num">۵</span>رندر سرور در برابر کلاینت</a></li>
+      <li><a href="#api"><span class="toc-num">۶</span>لایه ارتباط با بک‌اند</a></li>
+      <li><a href="#auth"><span class="toc-num">۷</span>احراز هویت، نقش‌ها و محافظت مسیر</a></li>
+      <li><a href="#dataflow"><span class="toc-num">۸</span>الگوی دریافت و به‌روزرسانی داده</a></li>
+      <li><a href="#components"><span class="toc-num">۹</span>کامپوننت‌های مشترک</a></li>
+      <li><a href="#styling"><span class="toc-num">۱۰</span>استایل، دیزاین‌سیستم و فارسی‌سازی</a></li>
+      <li><a href="#flows"><span class="toc-num">۱۱</span>جریان‌های اصلی کاربر</a></li>
+      <li><a href="#notes"><span class="toc-num">۱۲</span>نکات و مسیرهای بهبود</a></li>
+    </ol>
+  </nav>
+
+  <!-- ================= ۱. نمای کلی ================= -->
+  <section id="overview">
+    <div class="sec-head">
+      <div class="eyebrow">۱ · نمای کلی</div>
+      <h2>یک اپلیکیشن Next.js تک‌سمت‌کلاینت با بک‌اند جدا</h2>
+    </div>
+    <p>
+      فرانت‌اند یک فروشگاه آنلاین قطعات یدکی است که با <strong>Next.js 16 (App Router)</strong> و
+      <strong>React 19</strong> نوشته شده و تقریباً تمام صفحات آن به‌صورت کامپوننت کلاینت
+      (<code class="inline">'use client'</code>) اجرا می‌شوند. هیچ ارتباط مستقیمی با دیتابیس وجود ندارد؛
+      همه داده‌ها از یک بک‌اند Express جداگانه (پوشه <code class="inline">backend/</code>،
+      پیش‌فرض پورت <code class="inline">4000</code>) از طریق REST و با توکن JWT گرفته می‌شوند.
+    </p>
+
+    <div class="flow" role="img" aria-label="نمودار جریان درخواست از مرورگر تا دیتابیس">
+      <div class="flow-box">
+        <span class="fb-label">مرورگر</span>
+        <span class="fb-sub">React UI · CSS Modules</span>
+      </div>
+      <span class="flow-arrow" aria-hidden="true">←</span>
+      <div class="flow-box">
+        <span class="fb-label">لایه API</span>
+        <span class="fb-sub">src/lib/api.ts · fetch + Bearer</span>
+      </div>
+      <span class="flow-arrow" aria-hidden="true">←</span>
+      <div class="flow-box">
+        <span class="fb-label">بک‌اند Express</span>
+        <span class="fb-sub">port 4000 · JWT · zod</span>
+      </div>
+      <span class="flow-arrow" aria-hidden="true">←</span>
+      <div class="flow-box">
+        <span class="fb-label">دیتابیس</span>
+        <span class="fb-sub">PostgreSQL · Drizzle ORM</span>
+      </div>
+    </div>
+    <p class="flow-caption">
+      مسیر یک درخواست (در چیدمان راست‌چین از راست به چپ): کامپوننت React تابعی از
+      <code class="inline">lib/api.ts</code> را صدا می‌زند؛ این لایه آدرس بک‌اند و توکن را اضافه می‌کند و
+      پاسخ JSON — یا پیام خطای فارسی — را برمی‌گرداند.
+    </p>
+
+    <p>چهار لایهٔ مشخص در کد فرانت قابل تشخیص است:</p>
+    <ul class="plain">
+      <li><strong>لایه مسیر و چیدمان</strong> — پوشه <code class="inline">src/app</code> بر اساس قواعد App Router: هر <code class="inline">page.tsx</code> یک مسیر، هر <code class="inline">layout.tsx</code> یک پوسته مشترک.</li>
+      <li><strong>لایه وضعیت سراسری</strong> — فقط یک Context وجود دارد: <code class="inline">AuthContext</code> برای وضعیت ورود کاربر.</li>
+      <li><strong>لایه ارتباط</strong> — <code class="inline">src/lib/api.ts</code> (پروکسی HTTP) و <code class="inline">src/lib/types.ts</code> (قرارداد TypeScript با شکل داده‌های بک‌اند).</li>
+      <li><strong>لایه UI مشترک</strong> — چهار کامپوننت در <code class="inline">src/components</code> که بین صفحات بازاستفاده می‌شوند.</li>
+    </ul>
+    <div class="callout">
+      <strong>فلسفه کلی:</strong> حداقل وابستگی خارجی. هیچ کتابخانه state (Redux/Zustand)، هیچ UI-Kit،
+      هیچ axios — فقط React خالص، <code class="inline">fetch</code> بومی مرورگر، CSS Modules و TypeScript.
+      تنها «کتابخانه‌های» اضافه، خود Next.js و فونت وزیرمتن از <code class="inline">next/font</code> هستند.
+    </div>
+  </section>
+
+  <!-- ================= ۲. پشته فناوری ================= -->
+  <section id="stack">
+    <div class="sec-head">
+      <div class="eyebrow">۲ · پشته فناوری</div>
+      <h2>تصمیم‌های اصلی و جایگاه هر قطعه</h2>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>موضوع</th><th>انتخاب</th><th>توضیح</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>فریم‌ورک</td><td><code class="inline">next@16.3.0</code></td><td>App Router؛ اجرا و ساخت با <code class="inline">next dev / build / start</code></td></tr>
+          <tr><td>UI</td><td><code class="inline">react@19.2.8</code></td><td>هوک‌های تابعی؛ هیچ کلاس‌کامپوننتی وجود ندارد</td></tr>
+          <tr><td>زبان</td><td>TypeScript 5</td><td>نوع‌های مشترک داده در <code class="inline">lib/types.ts</code></td></tr>
+          <tr><td>استایل</td><td>CSS Modules + توکن‌های CSS</td><td>متغیرهای تم در <code class="inline">globals.css</code>؛ استایل اختصاصی هر صفحه در <code class="inline">*.module.css</code></td></tr>
+          <tr><td>فونت</td><td>Vazirmatn با <code class="inline">next/font/google</code></td><td>بارگذاری بهینه، متغیر <code class="inline">--font-vazirmatn</code></td></tr>
+          <tr><td>HTTP</td><td><code class="inline">fetch</code> بومی</td><td>یک wrapper واحد در <code class="inline">lib/api.ts</code> به‌جای axios</td></tr>
+          <tr><td>وضعیت سراسری</td><td>React Context</td><td>فقط <code class="inline">AuthContext</code>؛ بقیه وضعیت‌ها محلی در هر صفحه‌اند</td></tr>
+          <tr><td>زبان و جهت</td><td>فارسی · <code class="inline">dir="rtl"</code></td><td>اعمال روی <code class="inline">&lt;html&gt;</code> در چیدمان ریشه؛ اعداد با <code class="inline">toLocaleString('fa-IR')</code></td></tr>
+          <tr><td>اتصال به بک‌اند</td><td><code class="inline">NEXT_PUBLIC_API_URL</code></td><td>از <code class="inline">frontend/.env.local</code>؛ پیش‌فرض <code class="inline">http://localhost:4000</code></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="callout warn">
+      <strong>نکته نسخه:</strong> فایل <code class="inline">frontend/AGENTS.md</code> (تولیدشده توسط خود Next)
+      هشدار می‌دهد که Next.js 16 نسبت به نسخه‌های آشنا تغییرات شکستنده دارد — مثلاً
+      <code class="inline">params</code> در صفحات سرور یک <strong>Promise</strong> است و باید
+      <code class="inline">await</code> شود (که در صفحه جزئیات قطعه همین‌طور پیاده شده).
+    </div>
+  </section>
+
+  <!-- ================= ۳. ساختار پوشه‌ها ================= -->
+  <section id="structure">
+    <div class="sec-head">
+      <div class="eyebrow">۳ · ساختار</div>
+      <h2>ساختار پوشه‌ها و نقش هر بخش</h2>
+    </div>
+    <pre class="code"><code>frontend/
+├── .env.local            <span class="c-com"># آدرس بک‌اند (NEXT_PUBLIC_API_URL)</span>
+├── next.config.ts        <span class="c-com"># خالی — هیچ تنظیم سفارشی</span>
+└── src/
+    ├── app/              <span class="c-com"># مسیرها بر اساس App Router</span>
+    │   ├── layout.tsx    <span class="c-com"># چیدمان ریشه: فونت + AuthProvider + Navbar</span>
+    │   ├── globals.css   <span class="c-com"># توکن‌های تم + کلاس‌های پایه</span>
+    │   ├── page.tsx      <span class="c-com"># /           خانه</span>
+    │   ├── login/  register/                <span class="c-com"># ورود و ثبت‌نام</span>
+    │   ├── parts/        <span class="c-com"># لیست قطعات + [id] جزئیات</span>
+    │   ├── panel/        <span class="c-com"># پنل کاربر (layout محافظت‌شده)</span>
+    │   └── admin/        <span class="c-com"># پنل ادمین (layout محافظت‌شده)</span>
+    ├── components/       <span class="c-com"># Navbar · PartCard · PanelLayout · AuthGuard</span>
+    ├── context/          <span class="c-com"># AuthContext.tsx — وضعیت ورود</span>
+    └── lib/              <span class="c-com"># api.ts (پروکسی HTTP) · types.ts (قرارداد داده)</span></code></pre>
+    <p>
+      قاعده کلی: هر چیزی که به یک مسیر خاص تعلق دارد داخل همان پوشهٔ مسیر است
+      (مثل <code class="inline">PartDetailClient.tsx</code> کنار صفحه جزئیات)، و هر چیزی که بین صفحات
+      مشترک است به <code class="inline">components</code> یا <code class="inline">lib</code> منتقل شده است.
+    </p>
+  </section>
+
+  <!-- ================= ۴. مسیریابی ================= -->
+  <section id="routing">
+    <div class="sec-head">
+      <div class="eyebrow">۴ · مسیریابی</div>
+      <h2>مسیریابی مبتنی بر فایل و چیدمان‌های تودرتو</h2>
+    </div>
+    <p>
+      در App Router نام پوشه‌ها مسیر URL را می‌سازند. سه سطح «پوسته» روی هم سوار می‌شوند:
+    </p>
+    <ol class="seq">
+      <li><strong>چیدمان ریشه</strong> (<code class="inline">app/layout.tsx</code>) — دور <em>همه</em> صفحات: تگ <code class="inline">html dir="rtl"</code>، فونت وزیرمتن، <code class="inline">AuthProvider</code> و <code class="inline">Navbar</code>. این تنها جای پروژه است که Context را فراهم می‌کند.</li>
+      <li><strong>چیدمان پنل کاربر</strong> (<code class="inline">app/panel/layout.tsx</code>) — دور صفحات <code class="inline">/panel/*</code>: <code class="inline">AuthGuard</code> (نیاز به ورود) + <code class="inline">PanelLayout</code> با سایدبار «پروفایل / سفارش‌های من».</li>
+      <li><strong>چیدمان پنل ادمین</strong> (<code class="inline">app/admin/layout.tsx</code>) — دور صفحات <code class="inline">/admin/*</code>: <code class="inline">AuthGuard role="admin"</code> + سایدبار پنج‌گانه ادمین.</li>
+    </ol>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>مسیر</th><th>فایل</th><th>کار صفحه</th><th>دسترسی</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><code class="inline">/</code></td><td><code class="inline">app/page.tsx</code></td><td>هیرو + ۶ قطعه ویژه</td><td>عمومی</td></tr>
+          <tr><td><code class="inline">/parts</code></td><td><code class="inline">app/parts/page.tsx</code></td><td>لیست کامل + جستجوی زنده (debounce)</td><td>عمومی</td></tr>
+          <tr><td><code class="inline">/parts/[id]</code></td><td><code class="inline">app/parts/[id]/page.tsx</code></td><td>جزئیات قطعه + دکمه سفارش</td><td>عمومی (سفارش = ورود)</td></tr>
+          <tr><td><code class="inline">/login</code> · <code class="inline">/register</code></td><td><code class="inline">app/login</code> · <code class="inline">app/register</code></td><td>فرم ورود / ثبت‌نام</td><td>عمومی</td></tr>
+          <tr><td><code class="inline">/panel</code></td><td><code class="inline">app/panel/page.tsx</code></td><td>پروفایل کاربر جاری</td><td>کاربر واردشده</td></tr>
+          <tr><td><code class="inline">/panel/orders</code></td><td><code class="inline">app/panel/orders/page.tsx</code></td><td>سفارش‌های کاربر جاری</td><td>کاربر واردشده</td></tr>
+          <tr><td><code class="inline">/admin</code></td><td><code class="inline">app/admin/page.tsx</code></td><td>داشبورد آماری (قطعات/سفارش‌ها/کاربران)</td><td>فقط admin</td></tr>
+          <tr><td><code class="inline">/admin/parts</code></td><td><code class="inline">app/admin/parts/page.tsx</code></td><td>CRUD کامل قطعات (فرم + جدول)</td><td>فقط admin</td></tr>
+          <tr><td><code class="inline">/admin/categories</code></td><td><code class="inline">app/admin/categories/page.tsx</code></td><td>CRUD دسته‌بندی‌ها</td><td>فقط admin</td></tr>
+          <tr><td><code class="inline">/admin/orders</code></td><td><code class="inline">app/admin/orders/page.tsx</code></td><td>مشاهده همه سفارش‌ها + تغییر وضعیت</td><td>فقط admin</td></tr>
+          <tr><td><code class="inline">/admin/users</code></td><td><code class="inline">app/admin/users/page.tsx</code></td><td>لیست کاربران</td><td>فقط admin</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>
+      ناوبری با <code class="inline">&lt;Link&gt;</code> انجام می‌شود (ناوبری سمت کلاینت، بدون رفرش کامل) و
+      هدایت‌های برنامه‌ای با <code class="inline">router.push/replace</code> از
+      <code class="inline">useRouter</code> در <code class="inline">next/navigation</code>.
+    </p>
+  </section>
+
+  <!-- ================= ۵. رندر ================= -->
+  <section id="rendering">
+    <div class="sec-head">
+      <div class="eyebrow">۵ · مدل رندر</div>
+      <h2>رندر سرور در برابر کلاینت — تقریباً همه‌چیز کلاینت است</h2>
+    </div>
+    <p>
+      به‌جز دو فایل، تمام صفحات و کامپوننت‌ها با دستور <code class="inline">'use client'</code>
+      شروع می‌شوند؛ یعنی رندر اولیه روی سرور انجام می‌شود اما تعامل و دریافت داده در مرورگر.
+      تنها کامپوننت‌های سروری پروژه:
+    </p>
+    <ul class="plain">
+      <li><strong><code class="inline">app/layout.tsx</code></strong> — چیدمان ریشه؛ امکان تعریف <code class="inline">metadata</code> (عنوان و توضیح سئو) و بارگذاری فونت اینجا فراهم است.</li>
+      <li><strong><code class="inline">app/parts/[id]/page.tsx</code></strong> — یک الگوی «پوسته سرور + محتوای کلاینت»: صفحه سرور <code class="inline">params</code> را (که در Next 16 یک Promise است) باز می‌کند و <code class="inline">id</code> را به <code class="inline">PartDetailClient.tsx</code> می‌دهد.</li>
+    </ul>
+    <pre class="code"><code><span class="c-com">// app/parts/[id]/page.tsx — کامپوننت سرور</span>
+export default async function PartDetailPage({ params }) {
+  const { id } = await params;   <span class="c-com">// در Next.js 16 params یک Promise است</span>
+  return &lt;PartDetailClient id={id} /&gt;;  <span class="c-com">// تعاملات → کلاینت</span>
+}</code></pre>
+    <div class="callout">
+      <strong>نتیجه عملی:</strong> داده‌ها بعد از لود صفحه در مرورگر گرفته می‌شوند (نه داخل HTML اولیه)،
+      پس هر صفحه خودش وضعیت «در حال بارگذاری…» و «خطا» را مدیریت می‌کند. این ساده و سازگار با
+      احراز هویت مبتنی بر localStorage است، ولی یعنی از مزایای Server Components برای سئو/سرعت کمترین
+      استفاده شده (بخش ۱۲ را ببینید).
+    </div>
+  </section>
+
+  <!-- ================= ۶. لایه API ================= -->
+  <section id="api">
+    <div class="sec-head">
+      <div class="eyebrow">۶ · لایه ارتباط</div>
+      <h2>یک wrapper واحد برای همه درخواست‌ها</h2>
+    </div>
+    <p>
+      فایل <code class="inline">src/lib/api.ts</code> تنها دروازه ارتباط با بک‌اند است و چهار کار را
+      به‌صورت خودکار انجام می‌دهد:
+    </p>
+    <ul class="plain">
+      <li>چسباندن آدرس پایه بک‌اند (<code class="inline">NEXT_PUBLIC_API_URL</code> یا <code class="inline">localhost:4000</code>) به مسیر؛</li>
+      <li>خواندن توکن از <code class="inline">localStorage</code> و ارسال آن در هدر <code class="inline">Authorization: Bearer …</code> (فقط در مرورگر — روی سرور <code class="inline">null</code> برمی‌گردد)؛</li>
+      <li>ست <code class="inline">Content-Type: application/json</code>؛</li>
+      <li>در پاسخ غیر‌موفق، خواندن فیلد <code class="inline">error</code> از بدنه JSON و پرتاب آن به‌عنوان <code class="inline">Error</code> با پیام فارسی.</li>
+    </ul>
+    <pre class="code"><code><span class="c-com">// خلاصه lib/api.ts</span>
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
+
+export async function api&lt;T&gt;(path, options = {}) {
+  const token = getToken();                       <span class="c-com">// از localStorage</span>
+  const res = await fetch(`${API_URL}${path}`, {
+    ...options,
+    headers: {
+      'Content-Type': 'application/json',
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      ...options.headers,
+    },
+  });
+  if (!res.ok) {
+    <span class="c-com">// پیام خطای فارسی از بک‌اند → Error</span>
+    throw new Error((await res.json()).error ?? 'درخواست ناموفق بود');
+  }
+  return res.json() as Promise&lt;T&gt;;
+}
+
+<span class="c-com">// میان‌برهای متد</span>
+export const apiGet    = (path)         =&gt; api(path);
+export const apiPost   = (path, body)   =&gt; api(path, { method: 'POST',  body: JSON.stringify(body) });
+export const apiPut    = (path, body)   =&gt; api(path, { method: 'PUT',   body: JSON.stringify(body) });
+export const apiPatch  = (path, body)   =&gt; api(path, { method: 'PATCH', body: JSON.stringify(body) });
+export const apiDelete = (path)         =&gt; api(path, { method: 'DELETE' });</code></pre>
+
+    <h3>نقشه کامل endpointهای مصرف‌شده در فرانت</h3>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>متد</th><th>مسیر</th><th>صفحه مصرف‌کننده</th><th>کار</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><span class="method m-post">POST</span></td><td><code class="inline">/api/auth/login</code></td><td>ورود</td><td>دریافت توکن + شیء کاربر</td></tr>
+          <tr><td><span class="method m-post">POST</span></td><td><code class="inline">/api/auth/register</code></td><td>ثبت‌نام</td><td>ساخت حساب + ورود خودکار</td></tr>
+          <tr><td><span class="method m-get">GET</span></td><td><code class="inline">/api/parts?q=…</code></td><td>خانه · قطعات · ادمین</td><td>لیست قطعات (+ فیلتر جستجو)</td></tr>
+          <tr><td><span class="method m-get">GET</span></td><td><code class="inline">/api/parts/:id</code></td><td>جزئیات قطعه</td><td>یک قطعه</td></tr>
+          <tr><td><span class="method m-post">POST</span></td><td><code class="inline">/api/parts</code></td><td>ادمین › قطعات</td><td>افزودن قطعه</td></tr>
+          <tr><td><span class="method m-put">PUT</span></td><td><code class="inline">/api/parts/:id</code></td><td>ادمین › قطعات</td><td>ویرایش قطعه</td></tr>
+          <tr><td><span class="method m-del">DELETE</span></td><td><code class="inline">/api/parts/:id</code></td><td>ادمین › قطعات</td><td>حذف قطعه</td></tr>
+          <tr><td><span class="method m-get">GET</span> <span class="method m-post">POST</span> <span class="method m-put">PUT</span> <span class="method m-del">DELETE</span></td><td><code class="inline">/api/categories(/:id)</code></td><td>ادمین › دسته‌ها · فرم قطعه</td><td>CRUD دسته‌بندی + پر کردن select فرم</td></tr>
+          <tr><td><span class="method m-post">POST</span></td><td><code class="inline">/api/orders</code></td><td>جزئیات قطعه</td><td>ثبت سفارش: <code class="inline">items:[{partId, quantity}]</code></td></tr>
+          <tr><td><span class="method m-get">GET</span></td><td><code class="inline">/api/orders/mine</code></td><td>پنل › سفارش‌های من</td><td>سفارش‌های کاربر جاری</td></tr>
+          <tr><td><span class="method m-get">GET</span></td><td><code class="inline">/api/orders</code></td><td>ادمین › سفارش‌ها · داشبورد</td><td>همه سفارش‌ها (با items و user)</td></tr>
+          <tr><td><span class="method m-patch">PATCH</span></td><td><code class="inline">/api/orders/:id</code></td><td>ادمین › سفارش‌ها</td><td>تغییر وضعیت سفارش</td></tr>
+          <tr><td><span class="method m-get">GET</span></td><td><code class="inline">/api/users</code></td><td>ادمین › کاربران · داشبورد</td><td>لیست کاربران</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>
+      قرارداد شکل داده‌ها در <code class="inline">src/lib/types.ts</code> تعریف شده
+      (<code class="inline">User · Category · Part · Order · OrderItem</code>) و همه صفحات از همان نوع‌ها
+      استفاده می‌کنند؛ مثلاً <code class="inline">Part.categoryName</code> فیلدی است که از JOIN بک‌اند
+      می‌آید و در فرانت نمایش داده می‌شود.
+    </p>
+  </section>
+
+  <!-- ================= ۷. احراز هویت ================= -->
+  <section id="auth">
+    <div class="sec-head">
+      <div class="eyebrow">۷ · احراز هویت</div>
+      <h2>ورود مبتنی بر توکن، در دو قطعه: Context و Guard</h2>
+    </div>
+
+    <h3>۱) AuthContext — حافظه سراسری وضعیت ورود</h3>
+    <p>
+      <code class="inline">src/context/AuthContext.tsx</code> یک Provider است که در چیدمان ریشه دور کل
+      برنامه قرار گرفته و این API را با هوک <code class="inline">useAuth()</code> ارائه می‌کند:
+    </p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>عضو</th><th>نوع</th><th>توضیح</th></tr></thead>
+        <tbody>
+          <tr><td><code class="inline">user</code></td><td><code class="inline">User | null</code></td><td>کاربر جاری؛ <code class="inline">null</code> یعنی مهمان</td></tr>
+          <tr><td><code class="inline">loading</code></td><td><code class="inline">boolean</code></td><td>تا پایان بازیابی از localStorage در اولین mount</td></tr>
+          <tr><td><code class="inline">login(token, user)</code></td><td>تابع</td><td>نوشتن <code class="inline">token</code> و <code class="inline">user</code> در localStorage + آپدیت state</td></tr>
+          <tr><td><code class="inline">logout()</code></td><td>تابع</td><td>پاک کردن هر دو کلید و خالی کردن state</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>
+      در اولین بارگذاری، <code class="inline">user</code> از <code class="inline">localStorage</code> خوانده و
+      parse می‌شود (اگر خراب بود حذف می‌شود) و <code class="inline">loading</code> خاموش می‌شود. به این
+      ترتیب با رفرش صفحه، نشست کاربر از بین نمی‌رود.
+    </p>
+
+    <h3>۲) AuthGuard — محافظت مسیر در سطح چیدمان</h3>
+    <p>منطق کامپوننت <code class="inline">AuthGuard</code> که دور کل پنل‌ها قرار می‌گیرد:</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>شرط</th><th>نتیجه</th></tr></thead>
+        <tbody>
+          <tr><td><code class="inline">loading === true</code></td><td>انتظار؛ رندر «در حال بارگذاری...»</td></tr>
+          <tr><td>کاربر وارد نشده</td><td><code class="inline">router.replace('/login')</code></td></tr>
+          <tr><td><code class="inline">role="admin"</code> ولی نقش کاربر <code class="inline">user</code></td><td><code class="inline">router.replace('/panel')</code></td></tr>
+          <tr><td>در غیر این صورت</td><td>رندر children (خودِ صفحه)</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>
+      چون این منطق در <code class="inline">layout.tsx</code> هر پنل است، <strong>تمام صفحات زیرمجموعه</strong> به‌طور
+      خودکار محافظت می‌شوند و لازم نیست هر صفحه جداگانه گارد داشته باشد.
+      <code class="inline">Navbar</code> هم بر اساس همان Context خودش را تطبیق می‌دهد: مهمان → دکمه‌های
+      ورود/ثبت‌نام؛ کاربر → «پنل کاربر»؛ ادمین → «پنل ادمین» + نام + خروج.
+    </p>
+    <div class="callout warn">
+      <strong>مرز امنیت:</strong> AuthGuard صرفاً یک محافظ «تجربه کاربری» در مرورگر است؛ نقش و توکن در
+      localStorage قابل دستکاری‌اند. مرجع واقعی مجوزها همان بک‌اند است که هر درخواست اداری را با
+      middleware و JWT اعتبارسنجی می‌کند (Express + jsonwebtoken). فرانت فقط UI را بر اساس نقش شکل می‌دهد.
+    </div>
+  </section>
+
+  <!-- ================= ۸. الگوی داده ================= -->
+  <section id="dataflow">
+    <div class="sec-head">
+      <div class="eyebrow">۸ · الگوی داده</div>
+      <h2>دریافت داده با useEffect، بازخوانی بعد از هر تغییر</h2>
+    </div>
+    <p>
+      هیچ کتابخانه‌ای مثل React Query استفاده نشده؛ هر صفحه الگوی ثابت و یکسانی را تکرار می‌کند:
+    </p>
+    <ol class="seq">
+      <li>وضعیت محلی با <code class="inline">useState</code>: داده‌ها، <code class="inline">loading</code>، <code class="inline">error</code> (و در فرم‌ها: <code class="inline">saving/msg</code>).</li>
+      <li>یک تابع <code class="inline">load()</code> که با <code class="inline">apiGet</code> داده می‌گیرد و state را پر می‌کند.</li>
+      <li>فراخوانی <code class="inline">load()</code> در <code class="inline">useEffect</code> هنگام mount صفحه.</li>
+      <li>بعد از هر عملیات نوشتن (ذخیره/حذف/تغییر وضعیت) دوباره <code class="inline">load()</code> — یعنی «بازخوانی کامل لیست» به‌جای به‌روزرسانی محلی کش.</li>
+      <li>رندر سه‌حالته: پیام بارگذاری → خطا/حالت خالی → محتوا.</li>
+    </ol>
+
+    <h3>جستجوی زنده با debounce</h3>
+    <p>
+      در صفحه قطعات، تایپ در کادر جستجو state را عوض می‌کند و یک <code class="inline">useEffect</code> وابسته به
+      آن با <strong>۳۵۰ میلی‌ثانیه مکث</strong> درخواست را می‌فرستد — تا با هر حرف یک درخواست نرود:
+    </p>
+    <pre class="code"><code>useEffect(() =&gt; {
+  const timer = setTimeout(() =&gt; {
+    loadParts(search);               <span class="c-com">// GET /api/parts?q=…</span>
+  }, 350);
+  return () =&gt; clearTimeout(timer); <span class="c-com">// تایمر قبلی لغو می‌شود</span>
+}, [search]);</code></pre>
+
+    <h3>موازی‌سازی و اشتراک داده</h3>
+    <ul class="plain">
+      <li>داشبورد ادمین سه درخواست مستقل را با <code class="inline">Promise.all</code> هم‌زمان می‌گیرد و فقط «طول لیست‌ها» را به‌عنوان آمار نشان می‌دهد.</li>
+      <li>فرم قطعهٔ ادمین، لیست دسته‌بندی‌ها را همزمان با لیست قطعات می‌گیرد تا select دسته پر شود.</li>
+      <li>فرم افزودن/ویرایش یک فرم واحد است: کلیک «ویرایش» در جدول، فرم بالای صفحه را با دادهٔ آن ردیف پر می‌کند (<code class="inline">editingId</code> تعیین می‌کند دکمه، «افزودن» باشد یا «ذخیره تغییرات» و درخواست POST یا PUT برود).</li>
+    </ul>
+  </section>
+
+  <!-- ================= ۹. کامپوننت‌ها ================= -->
+  <section id="components">
+    <div class="sec-head">
+      <div class="eyebrow">۹ · کامپوننت‌های مشترک</div>
+      <h2>چهار قطعه بازاستفاده‌شونده</h2>
+    </div>
+    <div class="cards">
+      <div class="card">
+        <h4>Navbar</h4>
+        <span class="file">src/components/Navbar.tsx</span>
+        <p>نوار بالای همه صفحات (در چیدمان ریشه). از <code class="inline">useAuth</code> می‌فهمد مهمان، کاربر یا ادمین است و دکمه‌ها را متناظر با آن عوض می‌کند؛ دکمه خروج <code class="inline">logout()</code> را صدا می‌زند.</p>
+      </div>
+      <div class="card">
+        <h4>PartCard</h4>
+        <span class="file">src/components/PartCard.tsx</span>
+        <p>کارت خلاصه قطعه در لیست‌ها. کل کارت یک <code class="inline">&lt;Link&gt;</code> به <code class="inline">/parts/:id</code> است؛ عکس (یا جایگزین ⚙️)، دسته، نام، مدل، قیمت فارسی و نشان موجود/ناموجود را می‌چیند. props: <code class="inline">part: Part</code>.</p>
+      </div>
+      <div class="card">
+        <h4>PanelLayout</h4>
+        <span class="file">src/components/PanelLayout.tsx</span>
+        <p>اسکلت مشترک پنل‌ها: سایدبار (عنوان + لینک‌ها) و ناحیه محتوا. لینکِ مسیر جاری را با <code class="inline">usePathname</code> پررنگ می‌کند. props: <code class="inline">title</code>، <code class="inline">links</code>، <code class="inline">children</code> — همین یک کامپوننت، چیدمان هر دو پنل کاربر و ادمین را می‌سازد.</p>
+      </div>
+      <div class="card">
+        <h4>AuthGuard</h4>
+        <span class="file">src/components/AuthGuard.tsx</span>
+        <p>گارد مسیر توضیح‌داده‌شده در بخش ۷. props: <code class="inline">children</code> و <code class="inline">role?: 'admin'</code>. تا زمانی که وضعیت مشخص نشده، به‌جای children فقط «در حال بارگذاری...» نشان می‌دهد تا پلش (flash) محتوای محافظت‌شده رخ ندهد.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= ۱۰. استایل ================= -->
+  <section id="styling">
+    <div class="sec-head">
+      <div class="eyebrow">۱۰ · استایل</div>
+      <h2>دو لایه استایل: توکن‌های سراسری + CSS Modules</h2>
+    </div>
+    <h3>لایه ۱ — <code class="inline">globals.css</code>: دیزاین‌سیستم کوچک</h3>
+    <p>
+      متغیرهای CSS در <code class="inline">:root</code> کل هویت بصری را تعریف می‌کنند: پالت سرمه‌ای‌ـ‌آبی
+      تجاری (<code class="inline">--color-primary: #0a2540</code>، <code class="inline">--color-accent: #2563eb</code>)،
+      رنگ‌های وضعیت، شعاع گوشه‌ها و عرض ظرف (<code class="inline">1200px</code>). کنار آن، کلاس‌های پایه‌ای
+      که در همه صفحات استفاده می‌شوند:
+    </p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>کلاس</th><th>نقش</th></tr></thead>
+        <tbody>
+          <tr><td><code class="inline">.container</code> · <code class="inline">.card</code> · <code class="inline">.muted</code> · <code class="inline">.text-danger</code></td><td>چیدمان و متنی</td></tr>
+          <tr><td><code class="inline">.btn</code> + <code class="inline">btn-primary / secondary / outline / danger</code></td><td>دکمه‌ها</td></tr>
+          <tr><td><code class="inline">.field</code> + <code class="inline">.label</code> + <code class="inline">.input / .select / .textarea</code></td><td>فرم‌ها</td></tr>
+          <tr><td><code class="inline">.badge-pending / confirmed / delivered / cancelled</code></td><td>برچسب وضعیت سفارش</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <h3>لایه ۲ — CSS Modules: استایل اختصاصی هر صفحه</h3>
+    <p>
+      هر صفحه/کامپوننت فایل <code class="inline">*.module.css</code> خودش را دارد (مثل
+      <code class="inline">page.module.css</code>، <code class="inline">PanelLayout.module.css</code>) و در ادمین یک
+      <code class="inline">shared.module.css</code> مشترک برای جدول‌ها و فرم‌ها. این یعنی بدون Tailwind یا
+      کتابخانه UI، هم scope ایزوله داریم و هم سازگاری کلاس‌ها تضمین شده.
+    </p>
+    <h3>فارسی‌سازی و RTL</h3>
+    <ul class="plain">
+      <li><code class="inline">&lt;html lang="fa" dir="rtl"&gt;</code> در چیدمان ریشه — همه چیدمان‌ها راست‌چین می‌شوند.</li>
+      <li>فونت <strong>وزیرمتن</strong> با <code class="inline">next/font/google</code> (subsetهای arabic و latin، <code class="inline">display: swap</code>) به‌صورت متغیر CSS تزریق می‌شود.</li>
+      <li>اعداد و قیمت‌ها همه‌جا با <code class="inline">toLocaleString('fa-IR')</code> فارسی و جداکننده هزارگان می‌شوند.</li>
+      <li>فیلدهایی که محتوایشان لاتین است (ایمیل، رمز، کد فنی، قیمت) با <code class="inline">dir="ltr"</code> هنگام تایپ و نمایش درست رندر می‌شوند.</li>
+    </ul>
+  </section>
+
+  <!-- ================= ۱۱. جریان‌های کاربر ================= -->
+  <section id="flows">
+    <div class="sec-head">
+      <div class="eyebrow">۱۱ · جریان‌های اصلی</div>
+      <h2>سه سناریوی کلیدی، گام‌به‌گام</h2>
+    </div>
+
+    <h3>ورود / ثبت‌نام</h3>
+    <ol class="seq">
+      <li>کاربر فرم را submit می‌کند → <code class="inline">POST /api/auth/login</code> (یا <code class="inline">register</code>).</li>
+      <li>پاسخ شامل <code class="inline">token</code> و <code class="inline">user</code> است → <code class="inline">login(token, user)</code> آن‌ها را در localStorage و Context می‌گذارد.</li>
+      <li>هدایت بر اساس نقش: ادمین → <code class="inline">/admin</code>، کاربر → <code class="inline">/panel</code> (ثبت‌نام هم بلافاصله واردشده تمام می‌شود).</li>
+    </ol>
+
+    <h3>ثبت سفارش</h3>
+    <ol class="seq">
+      <li>در <code class="inline">/parts/:id</code> دکمه «سفارش این قطعه» (غیرفعال اگر موجودی صفر است).</li>
+      <li>اگر وارد نشده → هدایت به <code class="inline">/login</code>.</li>
+      <li><code class="inline">POST /api/orders</code> با <code class="inline">items: [{ partId, quantity: 1 }]</code> — سفارش تک‌قطعه‌ای، بدون سبد خرید.</li>
+      <li>پیام موفقیت؛ سفارش در <code class="inline">/panel/orders</code> از <code class="inline">GET /api/orders/mine</code> دیده می‌شود.</li>
+    </ol>
+
+    <h3>مدیریت داده در پنل ادمین (الگوی CRUD)</h3>
+    <ol class="seq">
+      <li>صفحه با <code class="inline">load()</code> باز می‌شود: لیست موجود + داده‌های کمکی (مثلاً دسته‌ها).</li>
+      <li>«افزودن» → <code class="inline">POST</code>؛ «ویرایش» → پر شدن فرم و <code class="inline">PUT /…/:id</code>؛ «حذف» → تأیید با <code class="inline">confirm()</code> و <code class="inline">DELETE</code>.</li>
+      <li>بعد از هر عملیات موفق، پیام فارسی نمایش و <code class="inline">load()</code> دوباره اجرا می‌شود تا جدول همیشه با سرور هم‌گام باشد.</li>
+    </ol>
+  </section>
+
+  <!-- ================= ۱۲. نکات ================= -->
+  <section id="notes">
+    <div class="sec-head">
+      <div class="eyebrow">۱۲ · مشاهده‌ها</div>
+      <h2>نکات شفاف و مسیرهای بهبود</h2>
+    </div>
+    <p>
+      این‌ها باگ نیستند؛ نقاطی‌اند که در توسعه بعدی ارزش تصمیم‌گیری دارند:
+    </p>
+    <ul class="plain">
+      <li><strong>محافظت مسیر فقط سمت کلاینت است.</strong> یک <code class="inline">middleware.ts</code> در ریشه Next می‌تواند قبل از ارسال JS هم مسیرهای <code class="inline">/panel</code> و <code class="inline">/admin</code> را بگیرد و فلش «در حال بارگذاری...» را حذف کند.</li>
+      <li><strong>توکن در localStorage</strong> در برابر XSS آسیب‌پذیر است؛ گزینه امن‌تر cookie با <code class="inline">httpOnly</code> است (نیازمند تغییر در بک‌اند).</li>
+      <li><strong>داشبورد برای سه عدد، سه لیست کامل</strong> را می‌گیرد؛ یک endpoint آماری (یا <code class="inline">count</code>) سبک‌تر است.</li>
+      <li><strong>سبد خرید وجود ندارد</strong> — هر سفارش یک قطعه با quantity=1 است؛ ساختار <code class="inline">items[]</code> بک‌اند برای سبد آماده است.</li>
+      <li><strong>خطای صفحه خانه بی‌صدا قورت داده می‌شود</strong> (<code class="inline">catch → []</code>)؛ کاربر نمی‌فهمد چرا لیست خالی است.</li>
+      <li><strong>تصاویر با <code class="inline">&lt;img&gt;</code> خام</strong> رندر می‌شوند (خود کد هم eslint-disable دارد)؛ <code class="inline">next/image</code> بهینه‌سازی و lazy-load می‌دهد.</li>
+      <li><strong>کدهای کمکی تکراری</strong> (<code class="inline">formatPrice</code> در ۵ فایل، <code class="inline">statusLabel</code> در ۲ فایل) — قابل انتقال به <code class="inline">lib/</code>.</li>
+      <li><strong>ظرفیت استفاده‌نشده از Server Components:</strong> چون همه صفحات کلاینت‌اند، لیست قطعات عمومی می‌تواند داده را روی سرور بگیرد و HTML اولیه پرتحویل بدهد (بهتر برای سئو و سرعت اولیه).</li>
+    </ul>
+    <div class="callout">
+      <strong>جمع‌بندی:</strong> معماری، ساده و آگاهانه انتخاب‌شده است — لایه‌های تمیز (routes / context / lib / components)،
+      یک دروازه API واحد، گارد مسیر در سطح layout و دیزاین‌سیستم توکن‌محور. همین سادگی باعث می‌شود
+      هر یک از بهبودهای بالا بدون بازنویسی، به‌صورت افزایشی قابل افزودن باشد.
+    </div>
+    <hr class="divider">
+    <p class="footnote">
+      تهیه‌شده از روی کد منبع در <span class="mono" dir="ltr">frontend/src</span> — آخرین بازبینی: آگوست ۲۰۲۶.
+    </p>
+  </section>
+
+</div>
