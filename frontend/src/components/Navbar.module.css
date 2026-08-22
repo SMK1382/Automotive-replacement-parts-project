@@ -1,0 +1,63 @@
+.header {
+  background: var(--color-primary);
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+
+.inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  height: 64px;
+  flex-wrap: wrap;
+}
+
+.logo {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #fff;
+}
+
+.nav {
+  display: flex;
+  gap: 1.25rem;
+}
+
+.link {
+  color: #cbd5e1;
+  font-size: 0.98rem;
+  transition: color 0.15s ease;
+}
+
+.link:hover {
+  color: #fff;
+}
+
+.auth {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.userName {
+  color: #e2e8f0;
+  font-size: 0.9rem;
+  max-width: 120px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* در صفحات کوچک، فاصله‌ها را کم می‌کنیم */
+@media (max-width: 600px) {
+  .nav {
+    gap: 0.75rem;
+  }
+  .userName {
+    display: none;
+  }
+}

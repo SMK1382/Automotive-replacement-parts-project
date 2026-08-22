@@ -1,0 +1,93 @@
+/* ===================================================================
+   استایل مشترک صفحات پنل ادمین
+   -------------------------------------------------------------------
+   این فایل را چند صفحه ادمین (قطعات، دسته‌ها، سفارش‌ها، کاربران)
+   مشترکاً استفاده می‌کنند تا کد تکراری ننویسیم.
+   =================================================================== */
+
+.title {
+  font-size: 1.3rem;
+  color: var(--color-primary);
+  margin-bottom: 1.25rem;
+}
+
+.form {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.formFull {
+  grid-column: 1 / -1;
+}
+
+.formActions {
+  grid-column: 1 / -1;
+  display: flex;
+  gap: 0.5rem;
+}
+
+/* جدول داده‌ها */
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--color-surface);
+}
+
+.table th,
+.table td {
+  padding: 0.7rem 0.85rem;
+  text-align: right;
+  border-bottom: 1px solid var(--color-border);
+  font-size: 0.92rem;
+}
+
+.table th {
+  background: var(--color-bg);
+  color: var(--color-muted);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.tableWrap {
+  overflow-x: auto;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+}
+
+.actions {
+  display: flex;
+  gap: 0.4rem;
+  white-space: nowrap;
+}
+
+.btnSm {
+  padding: 0.35rem 0.7rem;
+  font-size: 0.85rem;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.editBtn {
+  background: #dbeafe;
+  color: #1e40af;
+}
+
+.delBtn {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.rowMsg {
+  margin-top: 0.5rem;
+}
+
+/* در صفحات کوچک، فرم تک‌ستونی می‌شود */
+@media (max-width: 700px) {
+  .form {
+    grid-template-columns: 1fr;
+  }
+}

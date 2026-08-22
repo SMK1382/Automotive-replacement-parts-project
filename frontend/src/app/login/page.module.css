@@ -1,0 +1,22 @@
+.page {
+  padding: 2.5rem 0;
+}
+
+.title {
+  font-size: 1.4rem;
+  color: var(--color-primary);
+  margin-bottom: 1.25rem;
+  text-align: center;
+}
+
+.hint {
+  margin-top: 1rem;
+  text-align: center;
+  color: var(--color-muted);
+  font-size: 0.9rem;
+}
+
+.hint a {
+  color: var(--color-accent);
+  font-weight: 600;
+}

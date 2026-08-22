@@ -1,0 +1,67 @@
+.layout {
+  display: grid;
+  grid-template-columns: 250px 1fr;
+  gap: 1.5rem;
+  padding: 1.5rem 0;
+}
+
+.sidebar {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: 1.25rem;
+  height: fit-content;
+  position: sticky;
+  top: 80px;
+}
+
+.title {
+  font-size: 1.1rem;
+  color: var(--color-primary);
+  padding-bottom: 0.75rem;
+  margin-bottom: 0.75rem;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.nav {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.link {
+  display: block;
+  padding: 0.55rem 0.75rem;
+  border-radius: 8px;
+  color: var(--color-text);
+  font-size: 0.95rem;
+  transition: background 0.15s ease;
+}
+
+.link:hover {
+  background: var(--color-bg);
+}
+
+.linkActive {
+  display: block;
+  padding: 0.55rem 0.75rem;
+  border-radius: 8px;
+  background: var(--color-accent);
+  color: #fff;
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.content {
+  min-width: 0; /* برای جلوگیری از سرریز افقی */
+}
+
+/* در صفحات کوچک، ساید‌بار بالای محتوا قرار می‌گیرد */
+@media (max-width: 800px) {
+  .layout {
+    grid-template-columns: 1fr;
+  }
+  .sidebar {
+    position: static;
+  }
+}
