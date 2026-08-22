@@ -1,15 +1,41 @@
 backend/**/test.ts
 backend/**/test.js
+backend/.env
 
-node_modules/
+backend/node_modules/
 
 frontend/.next/
 backend/dist/
 
-.env
-.env.local
 
-.DS_Store
-=======
-./backend/src/test.ts
-./backend/src/test.js
+
+frontend/node_modules
+frontend/.pnp
+frontend/.pnp.*
+frontend/.yarn/*
+frontend/!.yarn/patches
+frontend/!.yarn/plugins
+frontend/!.yarn/releases
+frontend/!.yarn/versions
+
+frontend/coverage
+
+frontend/.next/
+frontend/out/
+
+frontend/build
+
+frontend/.DS_Store
+frontend/*.pem
+
+frontend/npm-debug.log*
+frontend/yarn-debug.log*
+frontend/yarn-error.log*
+frontend/.pnpm-debug.log*
+
+frontend/.env*
+
+frontend/.vercel
+
+frontend/*.tsbuildinfo
+frontend/next-env.d.ts
