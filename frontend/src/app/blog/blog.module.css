@@ -1,0 +1,132 @@
+/* صفحه بلاگ */
+
+.page {
+  padding: 1.5rem 0 2.5rem;
+}
+
+.title {
+  font-size: 1.35rem;
+  color: var(--color-primary);
+}
+
+.subtitle {
+  color: var(--color-muted);
+  font-size: 0.9rem;
+  margin: 4px 0 1.5rem;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  text-decoration: none;
+  transition: box-shadow 0.15s ease, transform 0.15s ease;
+}
+
+.card:hover {
+  box-shadow: 0 10px 28px rgba(10, 37, 64, 0.12);
+  transform: translateY(-2px);
+}
+
+.cover {
+  width: 100%;
+  height: 170px;
+  object-fit: cover;
+}
+
+.body {
+  padding: 16px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
+}
+
+.date {
+  font-size: 0.76rem;
+  color: var(--color-muted);
+}
+
+.body h2 {
+  font-size: 1rem;
+  color: var(--color-text);
+  line-height: 1.7;
+}
+
+.body p {
+  font-size: 0.84rem;
+  color: var(--color-muted);
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  flex: 1;
+}
+
+.more {
+  font-size: 0.82rem;
+  color: var(--color-accent);
+  font-weight: 600;
+}
+
+@media (max-width: 900px) {
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 560px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* صفحه مقاله */
+.header {
+  margin: 0.5rem 0 1.2rem;
+}
+
+.header h1 {
+  font-size: 1.5rem;
+  color: var(--color-primary);
+  line-height: 1.7;
+}
+
+.excerpt {
+  color: var(--color-muted);
+  font-size: 0.92rem;
+}
+
+.heroImage {
+  width: 100%;
+  max-height: 340px;
+  object-fit: cover;
+  border-radius: var(--radius);
+  margin-bottom: 1.4rem;
+}
+
+.content {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: 24px 28px;
+}
+
+.content p {
+  font-size: 0.95rem;
+  line-height: 2.2;
+  margin-bottom: 14px;
+}
+
+.backRow {
+  margin-top: 1.5rem;
+}

@@ -1,71 +1,285 @@
-/* بخش معرفی (Hero) */
+/* صفحه اصلی */
+
+.home {
+  padding-bottom: 1rem;
+}
+
+/* ---------------- بنر اصلی ---------------- */
+
 .hero {
-  background: linear-gradient(135deg, var(--color-primary), var(--color-primary-light));
+  position: relative;
+  margin-top: 16px;
+  border-radius: var(--radius);
+  overflow: hidden;
+  min-height: 280px;
+  background: linear-gradient(120deg, var(--color-primary), var(--color-primary-light));
+}
+
+.heroLink {
+  display: block;
+  position: relative;
+  height: 100%;
+  min-height: inherit;
+  text-decoration: none;
+}
+
+.heroImg {
+  width: 100%;
+  height: 340px;
+  object-fit: cover;
+  display: block;
+}
+
+.heroOverlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 10px;
+  padding: 24px 48px;
+  background: linear-gradient(to left, rgba(10, 37, 64, 0.75), rgba(10, 37, 64, 0.15) 65%, transparent);
+  max-width: 65%;
+}
+
+.heroOverlay h1 {
   color: #fff;
-  border-radius: 0 0 var(--radius) var(--radius);
-  padding: 3.5rem 1.5rem;
-  text-align: center;
-  margin-bottom: 2.5rem;
+  font-size: clamp(1.3rem, 3vw, 2rem);
+  line-height: 1.5;
 }
 
-.heroContent {
-  max-width: 700px;
-  margin: 0 auto;
-}
-
-.heroTitle {
-  font-size: 2.2rem;
-  font-weight: 800;
-  margin-bottom: 0.75rem;
-  line-height: 1.4;
-}
-
-.heroText {
-  font-size: 1.05rem;
+.heroOverlay p {
   color: #cbd5e1;
-  margin-bottom: 1.5rem;
+  font-size: 0.95rem;
 }
 
-/* بخش عمومی */
-.section {
-  margin-bottom: 2.5rem;
+.heroCta {
+  align-self: flex-start;
+  margin-top: 8px;
+  padding: 10px 22px;
+  border-radius: 8px;
+  background: var(--color-accent);
+  color: #fff;
+  font-size: 0.9rem;
+  font-weight: 700;
+  transition: background 0.15s ease;
 }
 
-.sectionHeader {
+.heroLink:hover .heroCta {
+  background: var(--color-accent-hover);
+}
+
+.heroFallback {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 12px;
+  padding: 48px;
+  min-height: 280px;
+  color: #fff;
+}
+
+.heroFallback h1 {
+  font-size: 1.7rem;
+}
+
+.heroFallback p {
+  color: #cbd5e1;
+}
+
+.dots {
+  position: absolute;
+  bottom: 14px;
+  right: 50%;
+  transform: translateX(50%);
+  display: flex;
+  gap: 8px;
+}
+
+.dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  border: none;
+  background: rgba(255, 255, 255, 0.45);
+  cursor: pointer;
+  transition: background 0.2s ease, width 0.2s ease;
+}
+
+.dotActive {
+  background: #fff;
+  width: 26px;
+}
+
+/* ---------------- مزیت‌ها ---------------- */
+
+.features {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.feature {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  margin-bottom: 1.25rem;
+  gap: 12px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: 14px 16px;
 }
 
-.sectionTitle {
-  font-size: 1.4rem;
+.feature > span {
+  font-size: 1.6rem;
+}
+
+.feature strong {
+  display: block;
+  font-size: 0.9rem;
   color: var(--color-primary);
 }
 
-.viewAll {
-  color: var(--color-accent);
-  font-weight: 600;
+.feature small {
+  color: var(--color-muted);
+  font-size: 0.76rem;
 }
 
-/* شبکه کارت‌های قطعه */
-.grid {
+/* ---------------- دسته‌بندی‌ها ---------------- */
+
+.catGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
-  gap: 1.25rem;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
 }
 
-/* دکمه بزرگ */
-:global(.btn-large) {
-  padding: 0.85rem 2rem;
-  font-size: 1.05rem;
+.catCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 22px 12px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  text-decoration: none;
+  text-align: center;
+  transition: border-color 0.15s ease, transform 0.15s ease;
 }
 
-@media (max-width: 600px) {
-  .heroTitle {
-    font-size: 1.6rem;
+.catCard:hover {
+  border-color: var(--color-accent);
+  transform: translateY(-2px);
+}
+
+.catIcon {
+  font-size: 2.2rem;
+}
+
+.catName {
+  font-weight: 700;
+  font-size: 0.92rem;
+  color: var(--color-text);
+}
+
+.catCount {
+  font-size: 0.74rem;
+  color: var(--color-muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 100%;
+}
+
+.noProducts {
+  padding: 2rem;
+  text-align: center;
+  color: var(--color-muted);
+  background: var(--color-surface);
+  border-radius: var(--radius);
+}
+
+/* ---------------- مقالات ---------------- */
+
+.blogGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+}
+
+.blogCard {
+  display: flex;
+  flex-direction: column;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  text-decoration: none;
+  transition: box-shadow 0.15s ease;
+}
+
+.blogCard:hover {
+  box-shadow: 0 8px 24px rgba(10, 37, 64, 0.1);
+}
+
+.blogImg {
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
+}
+
+.blogBody {
+  padding: 14px 16px;
+}
+
+.blogBody h3 {
+  font-size: 0.95rem;
+  color: var(--color-text);
+  margin-bottom: 6px;
+}
+
+.blogBody p {
+  font-size: 0.82rem;
+  color: var(--color-muted);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* ---------------- واکنش‌گرا ---------------- */
+
+@media (max-width: 900px) {
+  .features {
+    grid-template-columns: repeat(2, 1fr);
   }
-  .hero {
-    padding: 2.5rem 1rem;
+
+  .catGrid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .blogGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .heroImg {
+    height: 260px;
+  }
+
+  .heroOverlay {
+    max-width: 100%;
+    padding: 20px;
+  }
+}
+
+@media (max-width: 560px) {
+  .catGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .feature {
+    flex-direction: column;
+    text-align: center;
   }
 }

@@ -1,0 +1,165 @@
+/* کارت محصول */
+
+.card {
+  display: flex;
+  flex-direction: column;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  transition: box-shadow 0.2s ease, transform 0.2s ease, border-color 0.2s ease;
+}
+
+.card:hover {
+  box-shadow: 0 10px 28px rgba(10, 37, 64, 0.12);
+  transform: translateY(-3px);
+  border-color: color-mix(in srgb, var(--color-accent) 40%, var(--color-border));
+}
+
+.link {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  color: inherit;
+  text-decoration: none;
+}
+
+.imageBox {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  background: linear-gradient(135deg, #f1f5f9, #e2e8f0);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.placeholder {
+  font-size: 3rem;
+  opacity: 0.5;
+}
+
+.discountBadge {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: var(--color-danger);
+  color: #fff;
+  font-size: 0.78rem;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 999px;
+}
+
+.outBadge {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(241, 245, 249, 0.72);
+  color: var(--color-danger);
+  font-weight: 700;
+  font-size: 1rem;
+}
+
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 12px 14px 4px;
+  flex: 1;
+}
+
+.category {
+  align-self: flex-start;
+  font-size: 0.72rem;
+  color: var(--color-accent);
+  background: color-mix(in srgb, var(--color-accent) 8%, white);
+  padding: 2px 8px;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+.name {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 600;
+  line-height: 1.5;
+  color: var(--color-text);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  min-height: 2.9em;
+}
+
+.ratingRow,
+.brandRow {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  min-height: 1.2em;
+}
+
+.brandRow {
+  font-size: 0.8rem;
+  color: var(--color-muted);
+}
+
+.ratingCount {
+  font-size: 0.75rem;
+  color: var(--color-muted);
+}
+
+.priceRow {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  margin-top: auto;
+  padding-top: 6px;
+}
+
+.oldPrice {
+  font-size: 0.78rem;
+  color: var(--color-muted);
+}
+
+.price {
+  font-size: 1.02rem;
+  font-weight: 800;
+  color: var(--color-primary);
+}
+
+.addBtn {
+  margin: 10px 14px 14px;
+  padding: 9px 12px;
+  border: none;
+  border-radius: 8px;
+  background: var(--color-accent);
+  color: #fff;
+  font-family: inherit;
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.addBtn:hover {
+  background: var(--color-accent-hover);
+}
+
+.added {
+  background: var(--color-success) !important;
+}
+
+.disabled {
+  background: var(--color-muted);
+  cursor: not-allowed;
+}

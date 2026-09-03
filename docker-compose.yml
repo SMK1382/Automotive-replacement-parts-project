@@ -34,16 +34,5 @@ services:
     ports:
       - "8080:8080"
 
-  nginx:
-    image: nginx:latest
-    container_name: nginx-proxy
-    ports:
-      - "2324:80"
-    volumes:
-      - ./nginx/defaultConfig:/etc/nginx/conf.d/:ro
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
-    restart: unless-stopped
-
 volumes:
   pgdata:

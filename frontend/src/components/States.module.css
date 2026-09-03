@@ -1,0 +1,71 @@
+/* وضعیت‌های بارگذاری/خطا/خالی */
+
+.loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: 3rem 1rem;
+  color: var(--color-muted);
+}
+
+.spinner {
+  width: 22px;
+  height: 22px;
+  border: 3px solid var(--color-border);
+  border-top-color: var(--color-accent);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 2.5rem 1rem;
+  text-align: center;
+  color: var(--color-danger);
+  background: color-mix(in srgb, var(--color-danger) 6%, white);
+  border: 1px solid color-mix(in srgb, var(--color-danger) 25%, white);
+  border-radius: var(--radius);
+}
+
+.errorIcon {
+  font-size: 1.8rem;
+}
+
+.empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 3.5rem 1rem;
+  text-align: center;
+  background: var(--color-surface);
+  border: 1px dashed var(--color-border);
+  border-radius: var(--radius);
+}
+
+.emptyIcon {
+  font-size: 2.6rem;
+}
+
+.empty h3 {
+  margin: 0;
+  font-size: 1.1rem;
+  color: var(--color-text);
+}
+
+.empty p {
+  margin: 0;
+  color: var(--color-muted);
+  font-size: 0.92rem;
+  max-width: 420px;
+}

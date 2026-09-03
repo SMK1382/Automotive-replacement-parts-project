@@ -1,0 +1,111 @@
+/* فوتر */
+
+.footer {
+  margin-top: 4rem;
+  background: var(--color-primary);
+  color: #cbd5e1;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1.4fr;
+  gap: 2rem;
+  padding: 3rem 16px 2rem;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: #fff;
+}
+
+.logo span {
+  color: #60a5fa;
+}
+
+.desc {
+  margin: 12px 0;
+  font-size: 0.88rem;
+  line-height: 1.9;
+  color: #94a3b8;
+}
+
+.contactRows {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 0.85rem;
+}
+
+.col {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.col h3 {
+  margin: 0 0 4px;
+  font-size: 0.95rem;
+  color: #fff;
+}
+
+.col a {
+  color: #94a3b8;
+  font-size: 0.86rem;
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+.col a:hover {
+  color: #60a5fa;
+}
+
+.trustRow {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.trustBadge {
+  padding: 8px 12px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  font-size: 0.82rem;
+}
+
+.bottom {
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 14px 0;
+  font-size: 0.8rem;
+}
+
+.bottomInner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding-right: 16px;
+  padding-left: 16px;
+}
+
+.payment {
+  color: #94a3b8;
+}
+
+@media (max-width: 900px) {
+  .grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 560px) {
+  .grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+}

@@ -1,29 +1,21 @@
 'use client';
 
-// ===================================================================
-// چیدمان پنل کاربر
-// -------------------------------------------------------------------
-// همه صفحات /panel/* در این چیدمان قرار می‌گیرند.
-// AuthGuard مطمئن می‌شود که کاربر وارد شده باشد.
-// ===================================================================
-
+// چیدمان پنل کاربر — نیازمند ورود
+import { type ReactNode } from 'react';
 import AuthGuard from '@/components/AuthGuard';
 import PanelLayout from '@/components/PanelLayout';
 
-export default function PanelRootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+const links = [
+  { href: '/panel', label: '👤 پروفایل' },
+  { href: '/panel/orders', label: '📦 سفارش‌های من' },
+  { href: '/panel/addresses', label: '📍 آدرس‌های من' },
+  { href: '/panel/wishlist', label: '❤️ علاقه‌مندی‌ها' },
+];
+
+export default function UserPanelLayout({ children }: { children: ReactNode }) {
   return (
     <AuthGuard>
-      <PanelLayout
-        title="پنل کاربر"
-        links={[
-          { href: '/panel', label: 'پروفایل' },
-          { href: '/panel/orders', label: 'سفارش‌های من' },
-        ]}
-      >
+      <PanelLayout title="حساب کاربری" links={links}>
         {children}
       </PanelLayout>
     </AuthGuard>

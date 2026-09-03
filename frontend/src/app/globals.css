@@ -1,81 +1,120 @@
 /* ===================================================================
-   استایل سراسری و متغیرهای تم
-   -------------------------------------------------------------------
-   این فایل رنگ‌ها، فونت و کلاس‌های پایه (دکمه، فیلد، کارت) را تعریف
-   می‌کند. استایل اختصاصی هر صفحه در فایل‌های *.module.css قرار دارد.
-   =================================================================== */
+/* استایل سراسری و توکن‌های طراحی (فقط تم روشن)                     */
+/* =================================================================== */
 
 :root {
-  /* رنگ‌های اصلی تم سرمه‌ای بیزینسی */
-  --color-primary: #0a2540; /* سرمه‌ای تیره */
-  --color-primary-light: #1e3a8a; /* آبی */
-  --color-accent: #2563eb; /* آبی روشن‌تر برای دکمه‌ها */
+  --color-primary: #0a2540;
+  --color-primary-light: #1e3a8a;
+  --color-accent: #2563eb;
   --color-accent-hover: #1d4ed8;
-
-  /* رنگ‌های خنثی */
-  --color-bg: #f1f5f9; /* پس‌زمینه صفحه */
-  --color-surface: #ffffff; /* پس‌زمینه کارت‌ها */
-  --color-text: #1e293b; /* متن اصلی */
-  --color-muted: #64748b; /* متن کم‌رنگ */
-  --color-border: #e2e8f0; /* خطوط جداکننده */
-
-  /* رنگ‌های وضعیت */
+  --color-bg: #f1f5f9;
+  --color-surface: #ffffff;
+  --color-text: #1e293b;
+  --color-muted: #64748b;
+  --color-border: #e2e8f0;
   --color-danger: #dc2626;
   --color-success: #16a34a;
   --color-warning: #d97706;
-
-  /* فونت */
-  --font-vazirmatn: var(--font-vazirmatn), system-ui, Tahoma, sans-serif;
-
-  /* اندازه‌ها */
-  --radius: 10px;
-  --max-width: 1200px;
+  --radius: 12px;
+  --max-width: 1280px;
 }
 
-/* ریست ساده */
 * {
+  box-sizing: border-box;
   margin: 0;
   padding: 0;
-  box-sizing: border-box;
 }
 
-html,
+html {
+  scroll-behavior: smooth;
+}
+
 body {
-  font-family: var(--font-vazirmatn);
+  font-family: 'Vazirmatn', var(--font-vazirmatn, sans-serif), system-ui,
+    Tahoma, 'Segoe UI', sans-serif;
   background: var(--color-bg);
   color: var(--color-text);
-  line-height: 1.7;
+  line-height: 1.75;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+main.container {
+  flex: 1;
+  width: 100%;
 }
 
 a {
   color: inherit;
-  text-decoration: none;
 }
 
-ul {
+ul,
+ol {
   list-style: none;
 }
 
-/* ظرف مرکزی صفحه */
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+button {
+  font-family: inherit;
+}
+
+/* ------------------ کلاس‌های کمکی ------------------ */
+
 .container {
   max-width: var(--max-width);
   margin: 0 auto;
-  padding: 0 1rem;
+  padding: 0 16px;
+  width: 100%;
 }
 
-/* ----- دکمه‌های پایه ----- */
+.sectionTitle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 2.4rem 0 1.2rem;
+}
+
+.sectionTitle h2 {
+  font-size: 1.25rem;
+  color: var(--color-primary);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.sectionTitle a {
+  font-size: 0.85rem;
+  color: var(--color-accent);
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.sectionTitle a:hover {
+  text-decoration: underline;
+}
+
+/* ------------------ دکمه‌ها ------------------ */
+
 .btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 0.5rem;
-  padding: 0.6rem 1.2rem;
+  gap: 6px;
+  padding: 10px 20px;
   border: none;
-  border-radius: var(--radius);
+  border-radius: 8px;
   font-family: inherit;
-  font-size: 0.95rem;
+  font-size: 0.92rem;
+  font-weight: 600;
   cursor: pointer;
-  transition: background 0.15s ease, opacity 0.15s ease;
+  text-decoration: none;
+  transition: background 0.15s ease, color 0.15s ease, opacity 0.15s ease;
 }
 
 .btn:disabled {
@@ -92,34 +131,71 @@ ul {
   background: var(--color-accent-hover);
 }
 
+.btn-secondary {
+  background: var(--color-primary);
+  color: #fff;
+}
+
+.btn-secondary:hover:not(:disabled) {
+  background: var(--color-primary-light);
+}
+
 .btn-danger {
   background: var(--color-danger);
   color: #fff;
 }
 
-.btn-secondary {
-  background: var(--color-border);
-  color: var(--color-text);
+.btn-danger:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--color-danger) 85%, #000);
 }
 
 .btn-outline {
   background: transparent;
-  color: var(--color-accent);
   border: 1px solid var(--color-border);
+  color: var(--color-text);
 }
 
-/* ----- فیلدهای ورودی ----- */
+.btn-outline:hover:not(:disabled) {
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+}
+
+.btn-success {
+  background: var(--color-success);
+  color: #fff;
+}
+
+.btn-large {
+  padding: 13px 28px;
+  font-size: 1rem;
+}
+
+/* ------------------ فرم‌ها ------------------ */
+
+.label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 0.87rem;
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.label .req {
+  color: var(--color-danger);
+}
+
 .input,
 .select,
 .textarea {
   width: 100%;
-  padding: 0.6rem 0.8rem;
+  padding: 10px 14px;
   border: 1px solid var(--color-border);
-  border-radius: var(--radius);
+  border-radius: 8px;
   font-family: inherit;
-  font-size: 0.95rem;
+  font-size: 0.92rem;
   background: var(--color-surface);
   color: var(--color-text);
+  transition: border-color 0.15s ease;
 }
 
 .input:focus,
@@ -127,29 +203,54 @@ ul {
 .textarea:focus {
   outline: none;
   border-color: var(--color-accent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-accent) 15%, transparent);
 }
 
-.label {
-  display: block;
-  margin-bottom: 0.35rem;
-  font-size: 0.9rem;
-  color: var(--color-text);
-  font-weight: 600;
+.textarea {
+  min-height: 110px;
+  resize: vertical;
 }
 
 .field {
-  margin-bottom: 1rem;
+  margin-bottom: 16px;
 }
 
-/* ----- کارت ----- */
+.fieldError {
+  display: block;
+  margin-top: 4px;
+  font-size: 0.78rem;
+  color: var(--color-danger);
+}
+
+.formError {
+  padding: 10px 14px;
+  margin-bottom: 16px;
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--color-danger) 8%, white);
+  border: 1px solid color-mix(in srgb, var(--color-danger) 25%, white);
+  color: var(--color-danger);
+  font-size: 0.88rem;
+}
+
+.formSuccess {
+  padding: 10px 14px;
+  margin-bottom: 16px;
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--color-success) 8%, white);
+  border: 1px solid color-mix(in srgb, var(--color-success) 25%, white);
+  color: var(--color-success);
+  font-size: 0.88rem;
+}
+
+/* ------------------ کارت و متن ------------------ */
+
 .card {
   background: var(--color-surface);
   border: 1px solid var(--color-border);
   border-radius: var(--radius);
-  padding: 1.25rem;
+  padding: 20px;
 }
 
-/* متن‌های کمکی */
 .muted {
   color: var(--color-muted);
 }
@@ -158,28 +259,126 @@ ul {
   color: var(--color-danger);
 }
 
-/* برچسب وضعیت */
+.text-success {
+  color: var(--color-success);
+}
+
+/* ------------------ نشان‌های وضعیت سفارش ------------------ */
+
 .badge {
-  display: inline-block;
-  padding: 0.2rem 0.6rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 10px;
   border-radius: 999px;
-  font-size: 0.8rem;
+  font-size: 0.76rem;
   font-weight: 600;
+  white-space: nowrap;
 }
 
 .badge-pending {
   background: #fef3c7;
   color: #92400e;
 }
+
 .badge-confirmed {
   background: #dbeafe;
   color: #1e40af;
 }
+
+.badge-shipped {
+  background: #ede9fe;
+  color: #5b21b6;
+}
+
 .badge-delivered {
   background: #dcfce7;
   color: #166534;
 }
+
 .badge-cancelled {
   background: #fee2e2;
   color: #991b1b;
+}
+
+.badge-paid {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.badge-unpaid {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.badge-refunded {
+  background: #f1f5f9;
+  color: #475569;
+}
+
+/* ------------------ جدول‌های مدیریتی ------------------ */
+
+.tableWrap {
+  overflow-x: auto;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.88rem;
+  min-width: 640px;
+}
+
+.table th,
+.table td {
+  padding: 12px 14px;
+  text-align: right;
+  border-bottom: 1px solid var(--color-border);
+  white-space: nowrap;
+}
+
+.table th {
+  background: var(--color-bg);
+  color: var(--color-primary);
+  font-size: 0.82rem;
+}
+
+.table tbody tr:hover {
+  background: color-mix(in srgb, var(--color-accent) 3%, transparent);
+}
+
+.table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* شبکه کارت محصول */
+.productGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  gap: 16px;
+}
+
+@media (max-width: 560px) {
+  .productGrid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+}
+
+/* اسکرول‌بار ظریف */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 999px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
 }

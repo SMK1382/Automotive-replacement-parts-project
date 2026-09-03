@@ -1,0 +1,118 @@
+/* صفحه پیگیری سفارش */
+
+.page {
+  padding: 2rem 0 3rem;
+}
+
+.box {
+  max-width: 560px;
+  margin: 0 auto;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: 28px;
+}
+
+.box h1 {
+  font-size: 1.25rem;
+  color: var(--color-primary);
+  margin-bottom: 6px;
+}
+
+.form {
+  margin-top: 18px;
+}
+
+.result {
+  margin-top: 24px;
+  border-top: 1px solid var(--color-border);
+  padding-top: 20px;
+}
+
+.resultHead {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+
+.resultHead strong {
+  color: var(--color-primary);
+}
+
+.cancelled {
+  padding: 12px 14px;
+  border-radius: 8px;
+  background: #fee2e2;
+  color: #991b1b;
+  font-size: 0.88rem;
+}
+
+/* مراحل سفارش */
+.steps {
+  display: flex;
+  justify-content: space-between;
+  position: relative;
+  margin-bottom: 20px;
+}
+
+.steps::before {
+  content: '';
+  position: absolute;
+  top: 18px;
+  right: 24px;
+  left: 24px;
+  height: 3px;
+  background: var(--color-border);
+  border-radius: 2px;
+}
+
+.steps li {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  flex: 1;
+  font-size: 0.74rem;
+  color: var(--color-muted);
+  text-align: center;
+}
+
+.stepIcon {
+  width: 38px;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: var(--color-bg);
+  border: 2px solid var(--color-border);
+  font-size: 1rem;
+}
+
+.stepDone {
+  color: var(--color-success) !important;
+  font-weight: 700;
+}
+
+.stepDone .stepIcon {
+  background: #dcfce7;
+  border-color: var(--color-success);
+}
+
+.meta {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 0.86rem;
+  color: var(--color-muted);
+}
+
+@media (max-width: 560px) {
+  .steps li {
+    font-size: 0.62rem;
+  }
+}

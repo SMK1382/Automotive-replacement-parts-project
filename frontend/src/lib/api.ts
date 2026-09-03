@@ -1,65 +1,65 @@
-'use client';
-
 // ===================================================================
-// تابع کمکی برای ارسال درخواست به بک‌اند
+// کلاینت ارتباط با API بک‌اند
 // -------------------------------------------------------------------
-// این تابع به‌صورت خودکار:
-//  - آدرس بک‌اند را اضافه می‌کند
-//  - توکن کاربر را (اگر وارد شده باشد) در هدر Authorization می‌گذارد
-//  - خطاها را به‌صورت یک پیام فارسی برمی‌گرداند
+// - توکن از localStorage خوانده و در هدر Authorization قرار می‌گیرد
+// - پاسخ خطای ۴۰۱ باعث خروج خودکار کاربر می‌شود
+// - خطاها همیشه با پیام فارسی و قابل نمایش به کامپوننت برمی‌گردند
 // ===================================================================
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
+export const API_URL =
+  process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
 
-// خواندن توکن از localStorage (فقط در مرورگر وجود دارد)
-function getToken(): string | null {
-  if (typeof window === 'undefined') return null; // در سرور localStorage وجود ندارد
+export function getToken(): string | null {
+  if (typeof window === 'undefined') return null;
   return localStorage.getItem('token');
 }
 
-// تابع اصلی درخواست
-export async function api<T>(
+// رویداد خروج خودکار (توکن منقضی) — AuthContext به آن گوش می‌دهد
+export const AUTH_EXPIRED_EVENT = 'auth:expired';
+
+async function api<T>(
   path: string,
   options: RequestInit = {},
 ): Promise<T> {
+  const headers: Record<string, string> = {
+    'Content-Type': 'application/json',
+    ...(options.headers as Record<string, string> | undefined),
+  };
   const token = getToken();
+  if (token) headers.Authorization = `Bearer ${token}`;
 
-  const res = await fetch(`${API_URL}${path}`, {
-    ...options,
-    headers: {
-      'Content-Type': 'application/json',
-      // اگر توکن داشتیم، آن را در هدر می‌فرستیم
-      ...(token ? { Authorization: `Bearer ${token}` } : {}),
-      ...options.headers,
-    },
-  });
+  let res: Response;
+  try {
+    res = await fetch(`${API_URL}${path}`, { ...options, headers });
+  } catch {
+    throw new Error('ارتباط با سرور برقرار نشد؛ اتصال اینترنت را بررسی کنید');
+  }
 
-  // اگر پاسخ موفق نبود، پیام خطا را از بک‌اند می‌خوانیم
+  if (res.status === 401 && typeof window !== 'undefined') {
+    // توکن نامعتبر/منقضی است؛ کاربر باید دوباره وارد شود
+    window.dispatchEvent(new Event(AUTH_EXPIRED_EVENT));
+  }
+
   if (!res.ok) {
     let message = 'درخواست ناموفق بود';
     try {
-      const body = await res.json();
-      message = body.error || message;
+      const body = (await res.json()) as { error?: string };
+      if (body?.error) message = body.error;
     } catch {
-      // اگر بدنه JSON نبود، پیام پیش‌فرض را نگه می‌داریم
+      // بدنه JSON نبود؛ پیام پیش‌فرض حفظ می‌شود
     }
     throw new Error(message);
   }
 
-  return res.json() as Promise<T>;
+  return (await res.json()) as T;
 }
 
-// توابع کوتاه‌تر برای روش‌های رایج
 export const apiGet = <T>(path: string) => api<T>(path);
-
-export const apiPost = <T>(path: string, body: unknown) =>
-  api<T>(path, { method: 'POST', body: JSON.stringify(body) });
-
-export const apiPut = <T>(path: string, body: unknown) =>
-  api<T>(path, { method: 'PUT', body: JSON.stringify(body) });
-
-export const apiPatch = <T>(path: string, body: unknown) =>
-  api<T>(path, { method: 'PATCH', body: JSON.stringify(body) });
-
+export const apiPost = <T>(path: string, body?: unknown) =>
+  api<T>(path, { method: 'POST', body: JSON.stringify(body ?? {}) });
+export const apiPut = <T>(path: string, body?: unknown) =>
+  api<T>(path, { method: 'PUT', body: JSON.stringify(body ?? {}) });
+export const apiPatch = <T>(path: string, body?: unknown) =>
+  api<T>(path, { method: 'PATCH', body: JSON.stringify(body ?? {}) });
 export const apiDelete = <T>(path: string) =>
   api<T>(path, { method: 'DELETE' });

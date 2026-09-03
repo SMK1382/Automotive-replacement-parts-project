@@ -1,0 +1,45 @@
+/* استایل مشترک صفحات ورود/ثبت‌نام */
+
+.box {
+  max-width: 440px;
+  margin: 3rem auto 4rem;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: 32px 28px;
+}
+
+.title {
+  font-size: 1.35rem;
+  color: var(--color-primary);
+  margin-bottom: 6px;
+}
+
+.subtitle {
+  font-size: 0.88rem;
+  color: var(--color-muted);
+  margin-bottom: 22px;
+}
+
+.switch {
+  margin-top: 18px;
+  text-align: center;
+  font-size: 0.86rem;
+  color: var(--color-muted);
+}
+
+.switch a {
+  color: var(--color-accent);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.switch a:hover {
+  text-decoration: underline;
+}
+
+.hint {
+  font-size: 0.78rem;
+  color: var(--color-muted);
+  margin-top: 4px;
+}

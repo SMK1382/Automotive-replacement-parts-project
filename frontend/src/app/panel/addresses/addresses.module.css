@@ -1,0 +1,121 @@
+/* صفحه آدرس‌ها */
+
+.page {
+  padding: 1.5rem 0 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.title {
+  font-size: 1.25rem;
+  color: var(--color-primary);
+}
+
+.formCard {
+  background: var(--color-surface);
+  border: 2px solid color-mix(in srgb, var(--color-accent) 25%, white);
+  border-radius: var(--radius);
+  padding: 20px;
+}
+
+.formCard h2 {
+  font-size: 1rem;
+  color: var(--color-primary);
+  margin-bottom: 16px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0 16px;
+}
+
+.fullRow {
+  grid-column: 1 / -1;
+}
+
+.formActions {
+  display: flex;
+  gap: 10px;
+}
+
+.list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 12px;
+}
+
+.addressCard {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: 16px;
+}
+
+.addressHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.defaultBadge {
+  display: inline-block;
+  margin-right: 8px;
+  padding: 1px 10px;
+  border-radius: 999px;
+  background: #dcfce7;
+  color: #166534;
+  font-size: 0.7rem;
+  font-weight: 600;
+}
+
+.addressLine {
+  font-size: 0.88rem;
+  margin-bottom: 4px;
+}
+
+.addressActions {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+  flex-wrap: wrap;
+}
+
+.smallBtn {
+  padding: 5px 12px;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  background: none;
+  color: var(--color-text);
+  font-family: inherit;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: border-color 0.15s ease;
+}
+
+.smallBtn:hover {
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+}
+
+.deleteBtn:hover {
+  border-color: var(--color-danger);
+  color: var(--color-danger);
+}
+
+@media (max-width: 640px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}

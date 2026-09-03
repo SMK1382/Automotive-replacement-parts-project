@@ -12,7 +12,7 @@ import jwt from 'jsonwebtoken';
 // اطلاعات مهمی که داخل توکن JWT قرار می‌گیرد
 type TokenPayload = {
   id: number;
-  role: 'user' | 'admin';
+  role: 'user' | 'admin' | 'super_admin';
 };
 
 // هش کردن رمز عبور با استفاده از bcrypt

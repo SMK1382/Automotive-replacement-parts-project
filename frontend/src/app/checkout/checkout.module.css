@@ -1,0 +1,333 @@
+/* صفحه تسویه حساب */
+
+.page {
+  padding: 1rem 0 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+.title {
+  font-size: 1.3rem;
+  color: var(--color-primary);
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: 1fr 330px;
+  gap: 20px;
+  align-items: start;
+}
+
+.col {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-width: 0;
+}
+
+.section {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: 18px;
+}
+
+.section h2 {
+  font-size: 1rem;
+  color: var(--color-primary);
+  margin-bottom: 14px;
+}
+
+/* ---------------- آدرس‌ها ---------------- */
+
+.savedAddresses {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.addressOption {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 12px 14px;
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+  cursor: pointer;
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+.addressOption:has(input:checked) {
+  border-color: var(--color-accent);
+  background: color-mix(in srgb, var(--color-accent) 4%, white);
+}
+
+.addressOption input {
+  margin-top: 4px;
+  accent-color: var(--color-accent);
+}
+
+.addressText {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-size: 0.88rem;
+}
+
+.addressText small {
+  color: var(--color-muted);
+}
+
+.defaultBadge {
+  display: inline-block;
+  margin-right: 6px;
+  padding: 1px 8px;
+  border-radius: 999px;
+  background: #dcfce7;
+  color: #166534;
+  font-size: 0.7rem;
+  font-weight: 600;
+}
+
+.formGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0 14px;
+}
+
+.full {
+  grid-column: 1 / -1;
+}
+
+/* ---------------- پرداخت ---------------- */
+
+.payOptions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.payOption {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 14px;
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+  cursor: pointer;
+  transition: border-color 0.15s ease;
+}
+
+.payOption:has(input:checked) {
+  border-color: var(--color-accent);
+  background: color-mix(in srgb, var(--color-accent) 4%, white);
+}
+
+.payOption input {
+  margin-top: 4px;
+  accent-color: var(--color-accent);
+}
+
+.payOption strong {
+  display: block;
+  font-size: 0.92rem;
+}
+
+.payOption span {
+  font-size: 0.78rem;
+  color: var(--color-muted);
+}
+
+/* ---------------- خلاصه ---------------- */
+
+.summary {
+  position: sticky;
+  top: 140px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: 18px;
+}
+
+.summary h2 {
+  font-size: 1rem;
+  color: var(--color-primary);
+  margin-bottom: 12px;
+}
+
+.miniItems {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 10px 0;
+  border-bottom: 1px dashed var(--color-border);
+  margin-bottom: 10px;
+  max-height: 180px;
+  overflow-y: auto;
+}
+
+.miniItem {
+  display: flex;
+  gap: 8px;
+  font-size: 0.82rem;
+}
+
+.miniQty {
+  color: var(--color-accent);
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.miniName {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.couponBox {
+  margin-bottom: 12px;
+}
+
+.couponInput {
+  width: 100%;
+  padding: 9px 12px;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  font-family: inherit;
+  font-size: 0.84rem;
+  text-align: left;
+}
+
+.couponInput:focus {
+  outline: none;
+  border-color: var(--color-accent);
+}
+
+.couponBtn {
+  width: 100%;
+  margin-top: 6px;
+  padding: 8px;
+  border: 1px solid var(--color-accent);
+  border-radius: 8px;
+  background: none;
+  color: var(--color-accent);
+  font-family: inherit;
+  font-size: 0.84rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.couponBtn:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--color-accent) 6%, white);
+}
+
+.couponBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.summaryRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 7px 0;
+  font-size: 0.86rem;
+  color: var(--color-muted);
+  border-bottom: 1px dashed var(--color-border);
+}
+
+.discountRow {
+  color: var(--color-success);
+}
+
+.totalRow {
+  font-size: 1rem;
+  font-weight: 800;
+  color: var(--color-primary);
+  border-bottom: none;
+}
+
+/* ---------------- موفقیت ---------------- */
+
+.successBox {
+  background: var(--color-surface);
+  border: 1px solid color-mix(in srgb, var(--color-success) 30%, white);
+  border-radius: var(--radius);
+  padding: 3rem 2rem;
+  text-align: center;
+  max-width: 640px;
+  margin: 2rem auto;
+}
+
+.successIcon {
+  font-size: 3.4rem;
+}
+
+.successBox h1 {
+  margin: 12px 0 8px;
+  font-size: 1.35rem;
+  color: var(--color-primary);
+}
+
+.cardBox {
+  margin: 1.5rem auto;
+  padding: 18px;
+  border-radius: var(--radius);
+  background: var(--color-bg);
+  max-width: 420px;
+}
+
+.cardBox h3 {
+  font-size: 0.95rem;
+  margin-bottom: 8px;
+}
+
+.cardBox p {
+  font-size: 0.84rem;
+  color: var(--color-muted);
+  margin-bottom: 12px;
+  line-height: 1.9;
+}
+
+.cardNumber {
+  font-size: 1.25rem;
+  font-weight: 800;
+  letter-spacing: 2px;
+  color: var(--color-primary);
+  direction: ltr;
+}
+
+.cardHolder {
+  margin-top: 6px;
+  font-size: 0.84rem;
+  color: var(--color-muted);
+}
+
+.successActions {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+/* ---------------- واکنش‌گرا ---------------- */
+
+@media (max-width: 900px) {
+  .layout {
+    grid-template-columns: 1fr;
+  }
+
+  .summary {
+    position: static;
+  }
+
+  .formGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .payOptions {
+    grid-template-columns: 1fr;
+  }
+}

@@ -2,15 +2,20 @@
 // افزودن فیلد `user` به نوع Request در Express
 // -------------------------------------------------------------------
 // با این تعریف، می‌توانیم در مسیرها از `req.user` استفاده کنیم و
-// TypeScript خطایی ندهد. این فایل به‌صورت خودکار توسط TypeScript خوانده می‌شود.
+// TypeScript خطایی ندهد.
+// نکته: با moduleResolution=NodeNext این فایل باید یک «ماژول» باشد تا
+// به‌عنوان augmentation با تایپ‌های اصلی Express ادغام شود؛ به همین
+// دلیل import در ابتدای فایل آمده است.
 // ===================================================================
+
+import 'express';
 
 declare module 'express-serve-static-core' {
   interface Request {
     // بعد از تایید توکن، اطلاعات کاربر در این فیلد قرار می‌گیرد
     user?: {
       id: number;
-      role: 'user' | 'admin';
+      role: 'user' | 'admin' | 'super_admin';
     };
   }
 }

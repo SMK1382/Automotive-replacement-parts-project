@@ -1,111 +1,245 @@
 'use client';
 
 // ===================================================================
-// مدیریت سفارش‌ها (ادمین)
-// -------------------------------------------------------------------
-// همه سفارش‌ها را نشان می‌دهد و امکان تغییر وضعیت هر سفارش را می‌دهد.
+// مدیریت سفارش‌ها: فیلتر وضعیت، تغییر وضعیت، کد رهگیری و وضعیت پرداخت
 // ===================================================================
 
-import { useEffect, useState } from 'react';
+import { Fragment, useCallback, useEffect, useState } from 'react';
 import { apiGet, apiPatch } from '@/lib/api';
-import type { Order } from '@/lib/types';
-import s from '../shared.module.css';
+import {
+  formatDateTime,
+  formatNumber,
+  formatPrice,
+  orderStatusLabel,
+  paymentMethodLabel,
+  paymentStatusLabel,
+} from '@/lib/format';
+import type { Order, OrderStatus } from '@/lib/types';
+import { ErrorBox, Loading } from '@/components/States';
+import styles from '../shared.module.css';
 
-const STATUS_OPTIONS = [
-  { value: 'pending', label: 'در انتظار' },
-  { value: 'confirmed', label: 'تایید شده' },
+const STATUS_OPTIONS: { value: OrderStatus; label: string }[] = [
+  { value: 'pending', label: 'در انتظار بررسی' },
+  { value: 'confirmed', label: 'تأیید شده' },
+  { value: 'shipped', label: 'ارسال شده' },
   { value: 'delivered', label: 'تحویل شده' },
   { value: 'cancelled', label: 'لغو شده' },
 ];
 
-function statusLabel(status: string): string {
-  return STATUS_OPTIONS.find((o) => o.value === status)?.label || status;
-}
-
-function formatPrice(price: number): string {
-  return price.toLocaleString('fa-IR');
-}
-
 export default function AdminOrdersPage() {
-  const [orders, setOrders] = useState<Order[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [orders, setOrders] = useState<Order[] | null>(null);
   const [error, setError] = useState('');
+  const [statusFilter, setStatusFilter] = useState('all');
+  const [expanded, setExpanded] = useState<number | null>(null);
+  const [busyId, setBusyId] = useState<number | null>(null);
+  const [actionError, setActionError] = useState('');
+  const [trackingInputs, setTrackingInputs] = useState<Record<number, string>>({});
 
-  async function load() {
+  const load = useCallback(async (status: string) => {
+    setError('');
     try {
-      setOrders(await apiGet<Order[]>('/api/orders'));
+      // سقف limit در بک‌اند ۶۰ است
+      const qs = status !== 'all' ? `?status=${status}&limit=60` : '?limit=60';
+      const data = await apiGet<{ items: Order[] }>(`/api/orders${qs}`);
+      setOrders(data.items);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'خطا در دریافت سفارش‌ها');
-    } finally {
-      setLoading(false);
+      setOrders([]);
     }
-  }
-
-  useEffect(() => {
-    load();
   }, []);
 
-  // تغییر وضعیت یک سفارش
-  async function changeStatus(id: number, status: string) {
+  useEffect(() => {
+    load(statusFilter);
+  }, [load, statusFilter]);
+
+  async function updateOrder(id: number, body: Record<string, unknown>) {
+    setBusyId(id);
+    setActionError('');
     try {
-      await apiPatch(`/api/orders/${id}`, { status });
-      await load();
+      await apiPatch(`/api/orders/${id}`, body);
+      await load(statusFilter);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'خطا در تغییر وضعیت');
+      setActionError(err instanceof Error ? err.message : 'خطا در به‌روزرسانی سفارش');
+    } finally {
+      setBusyId(null);
     }
   }
 
-  if (loading) return <p className="muted">در حال بارگذاری...</p>;
-
   return (
-    <div>
-      <h1 className={s.title}>مدیریت سفارش‌ها</h1>
-      {error && <p className="text-danger">{error}</p>}
+    <div className={styles.page}>
+      <h1 className={styles.title}>مدیریت سفارش‌ها</h1>
 
-      {orders.length === 0 ? (
-        <div className="card">
-          <p className="muted">هنوز سفارشی ثبت نشده است.</p>
-        </div>
+      <div className={styles.filterRow}>
+        <label className="label" htmlFor="status-filter" style={{ margin: 0 }}>
+          فیلتر وضعیت:
+        </label>
+        <select
+          id="status-filter"
+          className="select"
+          value={statusFilter}
+          onChange={(e) => setStatusFilter(e.target.value)}
+        >
+          <option value="all">همه</option>
+          {STATUS_OPTIONS.map((s) => (
+            <option key={s.value} value={s.value}>{s.label}</option>
+          ))}
+        </select>
+      </div>
+
+      {actionError && <p className="formError">{actionError}</p>}
+      {error && <ErrorBox message={error} onRetry={() => load(statusFilter)} />}
+
+      {orders === null ? (
+        <Loading />
+      ) : orders.length === 0 ? (
+        <p className="muted">سفارشی با این وضعیت وجود ندارد.</p>
       ) : (
-        <div className={s.tableWrap}>
-          <table className={s.table}>
+        <div className="tableWrap">
+          <table className="table">
             <thead>
               <tr>
-                <th>شماره</th>
+                <th>#</th>
                 <th>مشتری</th>
-                <th>تعداد آیتم</th>
-                <th>مبلغ کل</th>
-                <th>وضعیت فعلی</th>
-                <th>تغییر وضعیت</th>
+                <th>مبلغ</th>
+                <th>پرداخت</th>
+                <th>تاریخ</th>
+                <th>وضعیت</th>
+                <th>کد رهگیری</th>
+                <th>جزئیات</th>
               </tr>
             </thead>
             <tbody>
-              {orders.map((order) => (
-                <tr key={order.id}>
-                  <td>#{order.id}</td>
-                  <td>{order.user ? order.user.name : `کاربر #${order.userId}`}</td>
-                  <td>{order.items ? order.items.length : 0}</td>
-                  <td>{formatPrice(order.totalAmount)}</td>
-                  <td>
-                    <span className={`badge badge-${order.status}`}>
-                      {statusLabel(order.status)}
-                    </span>
-                  </td>
-                  <td>
-                    <select
-                      className="select"
-                      value={order.status}
-                      onChange={(e) => changeStatus(order.id, e.target.value)}
-                      style={{ width: 'auto' }}
-                    >
-                      {STATUS_OPTIONS.map((opt) => (
-                        <option key={opt.value} value={opt.value}>
-                          {opt.label}
-                        </option>
-                      ))}
-                    </select>
-                  </td>
-                </tr>
+              {orders.map((o) => (
+                <Fragment key={o.id}>
+                  <tr>
+                    <td>
+                      <strong>{formatNumber(o.id)}</strong>
+                    </td>
+                    <td>
+                      {o.receiverName}
+                      <br />
+                      <small className={styles.subText} dir="ltr">{o.receiverPhone}</small>
+                    </td>
+                    <td>{formatPrice(o.totalAmount)}</td>
+                    <td>
+                      <span className={`badge badge-${o.paymentStatus}`}>
+                        {paymentStatusLabel(o.paymentStatus)}
+                      </span>
+                      <br />
+                      <small className={styles.subText}>
+                        {paymentMethodLabel(o.paymentMethod)}
+                      </small>
+                    </td>
+                    <td className={styles.subText}>{formatDateTime(o.createdAt)}</td>
+                    <td>
+                      <select
+                        className="select"
+                        style={{ width: 'auto', padding: '5px 8px', fontSize: '0.8rem' }}
+                        value={o.status}
+                        disabled={busyId === o.id}
+                        onChange={(e) => updateOrder(o.id, { status: e.target.value })}
+                      >
+                        {STATUS_OPTIONS.map((s) => (
+                          <option key={s.value} value={s.value}>{s.label}</option>
+                        ))}
+                      </select>
+                    </td>
+                    <td>
+                      <div style={{ display: 'flex', gap: 4, alignItems: 'center' }}>
+                        <input
+                          className="input"
+                          dir="ltr"
+                          style={{ width: 110, padding: '5px 8px', fontSize: '0.8rem' }}
+                          placeholder="—"
+                          value={trackingInputs[o.id] ?? o.trackingCode ?? ''}
+                          onChange={(e) =>
+                            setTrackingInputs((prev) => ({ ...prev, [o.id]: e.target.value }))
+                          }
+                        />
+                        <button
+                          type="button"
+                          className={styles.editBtn}
+                          disabled={busyId === o.id}
+                          onClick={() =>
+                            updateOrder(o.id, {
+                              trackingCode: trackingInputs[o.id] ?? o.trackingCode ?? '',
+                            })
+                          }
+                        >
+                          ثبت
+                        </button>
+                      </div>
+                    </td>
+                    <td>
+                      <div style={{ display: 'flex', gap: 4 }}>
+                        <button
+                          type="button"
+                          className={styles.editBtn}
+                          onClick={() => setExpanded(expanded === o.id ? null : o.id)}
+                        >
+                          {expanded === o.id ? 'بستن' : 'مشاهده'}
+                        </button>
+                        {o.paymentStatus === 'unpaid' && o.status !== 'cancelled' && (
+                          <button
+                            type="button"
+                            className={styles.editBtn}
+                            disabled={busyId === o.id}
+                            onClick={() => updateOrder(o.id, { paymentStatus: 'paid' })}
+                          >
+                            تأیید پرداخت
+                          </button>
+                        )}
+                      </div>
+                    </td>
+                  </tr>
+                  {expanded === o.id && (
+                    <tr>
+                      <td colSpan={8} style={{ background: 'var(--color-bg)' }}>
+                        <div className={styles.detailGrid}>
+                          <div>
+                            <h4>اقلام سفارش</h4>
+                            <ul>
+                              {(o.items ?? []).map((it) => (
+                                <li key={it.id}>
+                                  {it.partName ?? `#${it.partId}`} —{' '}
+                                  {formatNumber(it.quantity)} × {formatPrice(it.unitPrice)}
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                          <div>
+                            <h4>آدرس تحویل</h4>
+                            <p>
+                              {o.province}، {o.city}
+                            </p>
+                            <p>{o.addressLine}</p>
+                            <p dir="ltr" style={{ textAlign: 'right' }}>{o.postalCode}</p>
+                          </div>
+                          <div>
+                            <h4>صورتحساب</h4>
+                            <p>کالاها: {formatPrice(o.itemsSubtotal)}</p>
+                            <p>ارسال: {formatPrice(o.shippingCost)}</p>
+                            {o.discountAmount > 0 && (
+                              <p>
+                                تخفیف {o.couponCode ? `(${o.couponCode})` : ''}:{' '}
+                                −{formatPrice(o.discountAmount)}
+                              </p>
+                            )}
+                            <p>
+                              <strong>جمع: {formatPrice(o.totalAmount)}</strong>
+                            </p>
+                          </div>
+                          {o.note && (
+                            <div>
+                              <h4>یادداشت مشتری</h4>
+                              <p>{o.note}</p>
+                            </div>
+                          )}
+                        </div>
+                      </td>
+                    </tr>
+                  )}
+                </Fragment>
               ))}
             </tbody>
           </table>

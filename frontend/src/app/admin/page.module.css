@@ -1,23 +1,157 @@
+/* داشبورد مدیریت */
+
+.dashboard {
+  padding: 1.5rem 0 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
 .title {
-  font-size: 1.3rem;
+  font-size: 1.25rem;
   color: var(--color-primary);
-  margin-bottom: 1.5rem;
 }
 
-.grid {
+.statGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: 1.25rem;
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  gap: 12px;
 }
 
-.statValue {
-  font-size: 2.2rem;
-  font-weight: 800;
+.statCard {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: 16px 18px;
+}
+
+.statCard.alert {
+  border-color: color-mix(in srgb, var(--color-warning) 45%, white);
+  background: color-mix(in srgb, var(--color-warning) 5%, white);
+}
+
+.statIcon {
+  font-size: 1.7rem;
+}
+
+.statCard strong {
+  display: block;
+  font-size: 1.1rem;
+  color: var(--color-primary);
+}
+
+.statCard span:not(.statIcon) {
+  font-size: 0.78rem;
+  color: var(--color-muted);
+}
+
+.statLink {
+  position: absolute;
+  top: 10px;
+  left: 12px;
+  font-size: 0.74rem;
+  color: var(--color-accent);
+  text-decoration: none;
+}
+
+.statLink:hover {
+  text-decoration: underline;
+}
+
+.twoCols {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 16px;
+  align-items: start;
+}
+
+.panel {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: 18px;
+}
+
+.panelHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.panelHead h2 {
+  font-size: 0.98rem;
+  color: var(--color-primary);
+}
+
+.panelHead a {
+  font-size: 0.8rem;
+  color: var(--color-accent);
+  text-decoration: none;
+}
+
+.recentList {
+  display: flex;
+  flex-direction: column;
+}
+
+.recentRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--color-border);
+  font-size: 0.85rem;
+  flex-wrap: wrap;
+}
+
+.recentRow:last-child {
+  border-bottom: none;
+}
+
+.recentId {
+  font-weight: 700;
+  color: var(--color-primary);
+}
+
+.recentName {
+  flex: 1;
+  min-width: 120px;
+  color: var(--color-text);
+  text-decoration: none;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.recentName:hover {
   color: var(--color-accent);
 }
 
-.statLabel {
+.recentDate {
+  font-size: 0.74rem;
   color: var(--color-muted);
-  font-size: 0.95rem;
-  margin-top: 0.25rem;
+}
+
+.recentRow strong {
+  color: var(--color-primary);
+}
+
+.lowStockBadge {
+  padding: 2px 10px;
+  border-radius: 999px;
+  background: #fef3c7;
+  color: #92400e;
+  font-size: 0.76rem;
+  font-weight: 700;
+}
+
+@media (max-width: 900px) {
+  .twoCols {
+    grid-template-columns: 1fr;
+  }
 }

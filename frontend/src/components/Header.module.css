@@ -1,0 +1,672 @@
+/* هدر سایت — سه نواره (سبک فروشگاه‌های آنلاین ایرانی) */
+
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: var(--color-primary);
+  box-shadow: 0 2px 10px rgba(10, 37, 64, 0.25);
+}
+
+/* ================= ۱) نوار بالایی ================= */
+
+.topbar {
+  background: color-mix(in srgb, var(--color-primary) 70%, #000);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  font-size: 0.78rem;
+}
+
+.topbarInner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 5px 16px;
+  min-height: 32px;
+}
+
+.topLinks {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #94a3b8;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.topLinks a {
+  color: #94a3b8;
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+.topLinks a:hover {
+  color: #fff;
+}
+
+.sep {
+  color: #475569;
+}
+
+.topAuth {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+}
+
+.topAuth a {
+  color: #93c5fd;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.topAuth a:hover {
+  color: #fff;
+  text-decoration: underline;
+}
+
+.topUser {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  white-space: nowrap;
+}
+
+.welcome {
+  color: #e2e8f0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 180px;
+}
+
+.topPanelLink {
+  color: #93c5fd !important;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.topPanelLink:hover {
+  color: #fff !important;
+}
+
+.topLogout {
+  background: none;
+  border: none;
+  color: #f87171;
+  font-family: inherit;
+  font-size: 0.78rem;
+  cursor: pointer;
+}
+
+.topLogout:hover {
+  text-decoration: underline;
+}
+
+/* ================= ۲) نوار اصلی ================= */
+
+.bar {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 10px 16px;
+}
+
+.burger {
+  display: none;
+  flex-direction: column;
+  gap: 4px;
+  background: none;
+  border: none;
+  padding: 8px;
+  cursor: pointer;
+}
+
+.burger span {
+  width: 22px;
+  height: 2.5px;
+  background: #fff;
+  border-radius: 2px;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  color: #fff;
+  white-space: nowrap;
+}
+
+.logoIcon {
+  font-size: 1.5rem;
+}
+
+.logoText {
+  font-size: 1.25rem;
+  font-weight: 800;
+}
+
+.logoText span {
+  color: #60a5fa;
+}
+
+/* ---------------- جست‌وجو ---------------- */
+
+.searchForm {
+  flex: 1;
+  display: flex;
+  max-width: 560px;
+}
+
+.searchInput {
+  flex: 1;
+  min-width: 0;
+  border: none;
+  border-radius: 8px 0 0 8px;
+  padding: 10px 14px;
+  font-family: inherit;
+  font-size: 0.92rem;
+  background: #fff;
+}
+
+.searchInput:focus {
+  outline: 2px solid var(--color-accent);
+  outline-offset: -2px;
+}
+
+.searchBtn {
+  border: none;
+  border-radius: 0 8px 8px 0;
+  padding: 0 16px;
+  background: var(--color-accent);
+  color: #fff;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.searchBtn:hover {
+  background: var(--color-accent-hover);
+}
+
+.mobileSearch {
+  display: none;
+  padding: 0 12px 10px;
+}
+
+.mobileSearch form {
+  display: flex;
+}
+
+/* ---------------- اقدامات ---------------- */
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-right: auto;
+}
+
+.actionBtn {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 10px;
+  font-size: 1.15rem;
+  text-decoration: none;
+  background: rgba(255, 255, 255, 0.08);
+  transition: background 0.15s ease;
+}
+
+.actionBtn:hover {
+  background: rgba(255, 255, 255, 0.18);
+}
+
+.badge {
+  position: absolute;
+  top: -4px;
+  left: -6px;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 4px;
+  border-radius: 999px;
+  background: var(--color-danger);
+  color: #fff;
+  font-size: 0.68rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.userLoading {
+  color: rgba(255, 255, 255, 0.7);
+  padding: 0 8px;
+}
+
+/* دکمه ورود (کاربر مهمان) */
+.loginBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 9px 18px;
+  border-radius: 8px;
+  background: var(--color-accent);
+  color: #fff;
+  font-size: 0.88rem;
+  font-weight: 700;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background 0.15s ease;
+}
+
+.loginBtn:hover {
+  background: var(--color-accent-hover);
+}
+
+/* دکمه «پنل من» (کاربر واردشده) */
+.userMenu {
+  position: relative;
+}
+
+.panelBtn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  max-width: 260px;
+  padding: 8px 14px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.06);
+  color: #fff;
+  font-family: inherit;
+  font-size: 0.88rem;
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.panelBtn:hover {
+  background: rgba(255, 255, 255, 0.14);
+  border-color: rgba(255, 255, 255, 0.32);
+}
+
+.panelBtnText {
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.panelBtnName {
+  max-width: 120px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: #cbd5e1;
+  font-size: 0.8rem;
+}
+
+.caret {
+  color: #94a3b8;
+  font-size: 0.7rem;
+}
+
+/* منوی کشویی کاربر */
+.dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  min-width: 210px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 12px 32px rgba(10, 37, 64, 0.2);
+  padding: 6px;
+  display: flex;
+  flex-direction: column;
+}
+
+.dropdownHead {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 10px 12px;
+  margin-bottom: 4px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.dropdownHead strong {
+  color: var(--color-primary);
+  font-size: 0.9rem;
+}
+
+.dropdownHead small {
+  color: var(--color-muted);
+  direction: ltr;
+  text-align: right;
+  font-size: 0.74rem;
+}
+
+.dropItem {
+  display: block;
+  padding: 9px 12px;
+  border: none;
+  border-radius: 8px;
+  background: none;
+  color: var(--color-text);
+  font-family: inherit;
+  font-size: 0.88rem;
+  text-align: right;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.dropItem:hover {
+  background: var(--color-bg);
+}
+
+.dropDanger {
+  color: var(--color-danger);
+}
+
+/* ================= ۳) نوار دسته‌بندی ================= */
+
+.navbar {
+  background: color-mix(in srgb, var(--color-primary) 85%, #000);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.navInner {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding: 0 12px;
+}
+
+.navItemWrap {
+  position: relative;
+}
+
+.navItem {
+  padding: 11px 14px;
+  background: none;
+  border: none;
+  color: #e2e8f0;
+  font-family: inherit;
+  font-size: 0.9rem;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: color 0.15s ease, background 0.15s ease;
+}
+
+.navItem:hover,
+.navLink:hover,
+.navHotLink:hover {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.07);
+}
+
+.navLink {
+  padding: 11px 14px;
+  color: #e2e8f0;
+  font-size: 0.9rem;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.navHotLink {
+  padding: 11px 14px;
+  color: #fca5a5;
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+/* مگامنو */
+.mega {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  width: min(860px, 90vw);
+  background: #fff;
+  border-radius: 0 0 12px 12px;
+  box-shadow: 0 20px 48px rgba(10, 37, 64, 0.25);
+  overflow: hidden;
+}
+
+.megaCols {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 8px;
+  padding: 16px;
+}
+
+.megaCol {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.megaTitle {
+  padding: 6px 8px;
+  color: var(--color-primary);
+  font-weight: 700;
+  font-size: 0.9rem;
+  text-decoration: none;
+  border-radius: 6px;
+}
+
+.megaTitle:hover {
+  background: var(--color-bg);
+}
+
+.megaLink {
+  padding: 5px 8px 5px 16px;
+  color: var(--color-muted);
+  font-size: 0.84rem;
+  text-decoration: none;
+  border-radius: 6px;
+}
+
+.megaLink:hover {
+  color: var(--color-accent);
+  background: var(--color-bg);
+}
+
+.megaFooter {
+  display: block;
+  padding: 10px 16px;
+  background: var(--color-bg);
+  color: var(--color-accent);
+  font-size: 0.86rem;
+  font-weight: 600;
+  text-decoration: none;
+  text-align: center;
+}
+
+.megaFooter:hover {
+  background: color-mix(in srgb, var(--color-accent) 10%, var(--color-bg));
+}
+
+/* ================= کشوی موبایل ================= */
+
+.drawer {
+  background: #fff;
+  max-height: calc(100vh - 130px);
+  overflow-y: auto;
+  padding: 12px 16px 24px;
+  border-top: 3px solid var(--color-accent);
+}
+
+.drawerAuth {
+  display: flex;
+  gap: 10px;
+  padding-bottom: 14px;
+  margin-bottom: 6px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.drawerAuth .btn {
+  flex: 1;
+}
+
+.drawerUser {
+  padding-bottom: 12px;
+  margin-bottom: 6px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.drawerUser strong {
+  color: var(--color-primary);
+  font-size: 0.95rem;
+}
+
+.drawerUserLinks {
+  display: flex;
+  gap: 8px;
+  margin-top: 10px;
+  flex-wrap: wrap;
+}
+
+.drawerNav {
+  display: flex;
+  flex-direction: column;
+}
+
+.drawerLink {
+  display: block;
+  padding: 11px 4px;
+  border: none;
+  border-bottom: 1px solid var(--color-border);
+  background: none;
+  color: var(--color-text);
+  font-family: inherit;
+  font-size: 0.95rem;
+  text-align: right;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.drawerSectionTitle {
+  margin: 18px 0 8px;
+  color: var(--color-primary);
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+
+.drawerCatRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.drawerCat {
+  flex: 1;
+  padding: 10px 4px;
+  color: var(--color-text);
+  font-size: 0.92rem;
+  text-decoration: none;
+}
+
+.expandBtn {
+  background: none;
+  border: none;
+  color: var(--color-muted);
+  font-size: 1rem;
+  padding: 10px;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.expanded {
+  transform: rotate(180deg);
+}
+
+.drawerSubcats {
+  display: flex;
+  flex-direction: column;
+  padding-right: 18px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.drawerSubcat {
+  padding: 7px 4px;
+  color: var(--color-muted);
+  font-size: 0.86rem;
+  text-decoration: none;
+}
+
+.drawerBrands {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.drawerBrandChip {
+  padding: 6px 14px;
+  border-radius: 999px;
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  color: var(--color-text);
+  font-size: 0.85rem;
+  font-family: inherit;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+/* ================= واکنش‌گرا ================= */
+
+@media (max-width: 900px) {
+  .searchForm {
+    display: none;
+  }
+
+  .mobileSearch {
+    display: block;
+  }
+
+  .burger {
+    display: flex;
+  }
+
+  .navbar {
+    display: none;
+  }
+
+  .actions {
+    gap: 4px;
+  }
+
+  .panelBtnName {
+    display: none;
+  }
+
+  .loginBtn span:last-child {
+    display: none;
+  }
+
+  .loginBtn {
+    width: 42px;
+    height: 42px;
+    justify-content: center;
+    border-radius: 10px;
+  }
+}
+
+@media (max-width: 640px) {
+  .topLinks {
+    font-size: 0.7rem;
+  }
+
+  /* در موبایل فقط مهم‌ترین لینک نوار بالا بماند */
+  .topLinks a:nth-child(n + 3),
+  .topLinks .sep:nth-child(n + 2) {
+    display: none;
+  }
+
+  .welcome {
+    max-width: 90px;
+  }
+}

@@ -1,0 +1,183 @@
+/* صفحه مدیریت کاربران */
+
+.page {
+  padding: 1.5rem 0 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.title {
+  font-size: 1.25rem;
+  color: var(--color-primary);
+}
+
+.formCard {
+  background: var(--color-surface);
+  border: 2px solid color-mix(in srgb, var(--color-accent) 25%, white);
+  border-radius: var(--radius);
+  padding: 20px;
+}
+
+.formCard h2 {
+  font-size: 1rem;
+  color: var(--color-primary);
+  margin-bottom: 16px;
+}
+
+.formGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 0 16px;
+}
+
+.formActions {
+  display: flex;
+  gap: 10px;
+}
+
+.filters {
+  display: flex;
+  gap: 10px;
+}
+
+.searchInput {
+  flex: 1;
+  padding: 10px 14px;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  font-family: inherit;
+  font-size: 0.9rem;
+}
+
+.searchInput:focus {
+  outline: none;
+  border-color: var(--color-accent);
+}
+
+.roleSelect {
+  padding: 10px 12px;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  font-family: inherit;
+  font-size: 0.88rem;
+  background: var(--color-surface);
+  cursor: pointer;
+}
+
+.nameBtn {
+  background: none;
+  border: none;
+  color: var(--color-accent);
+  font-family: inherit;
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0;
+}
+
+.nameBtn:hover {
+  text-decoration: underline;
+}
+
+.roleBadge {
+  padding: 3px 12px;
+  border-radius: 999px;
+  border: 1px solid var(--color-border);
+  background: var(--color-bg);
+  color: var(--color-muted);
+  font-family: inherit;
+  font-size: 0.76rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.roleBadge:hover {
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+}
+
+.roleAdmin {
+  background: #dbeafe;
+  border-color: #bfdbfe;
+  color: #1e40af;
+}
+
+.roleSuperAdmin {
+  background: #fef3c7;
+  border-color: #fde68a;
+  color: #92400e;
+  cursor: default;
+}
+
+.rowActions {
+  display: flex;
+  gap: 4px;
+}
+
+.miniBtn {
+  width: 32px;
+  height: 32px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  background: none;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: border-color 0.15s ease;
+}
+
+.miniBtn:hover {
+  border-color: var(--color-accent);
+}
+
+.dangerBtn:hover {
+  border-color: var(--color-danger);
+}
+
+/* ردیف جزئیات */
+.detailRow > td {
+  background: color-mix(in srgb, var(--color-bg) 55%, white) !important;
+  white-space: normal !important;
+}
+
+.detailGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  padding: 6px 4px;
+}
+
+.detailGrid h4 {
+  font-size: 0.85rem;
+  color: var(--color-primary);
+  margin-bottom: 8px;
+}
+
+.detailList {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 0.82rem;
+}
+
+@media (max-width: 760px) {
+  .detailGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .filters {
+    flex-direction: column;
+  }
+}

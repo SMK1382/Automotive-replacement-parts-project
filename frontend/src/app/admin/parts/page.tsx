@@ -1,304 +1,676 @@
 'use client';
 
 // ===================================================================
-// مدیریت قطعات (ادمین)
-// -------------------------------------------------------------------
-// - لیست قطعات در یک جدول
-// - فرم افزودن قطعه جدید (یا ویرایش قطعه انتخاب‌شده)
-// - دکمه ویرایش و حذف برای هر ردیف
+// مدیریت قطعات: جست‌وجو، فهرست، ساخت/ویرایش با تصاویر و سازگاری، حذف
 // ===================================================================
 
-import { useEffect, useState } from 'react';
-import { apiGet, apiPost, apiPut, apiDelete } from '@/lib/api';
-import type { Part, Category } from '@/lib/types';
-import s from '../shared.module.css';
+import Link from 'next/link';
+import { useCallback, useEffect, useState } from 'react';
+import { apiDelete, apiGet, apiPost, apiPut } from '@/lib/api';
+import { formatNumber, formatPrice, imageUrl } from '@/lib/format';
+import type { Brand, Category, Compatibility, PartDetail, PartListItem, ProductImage } from '@/lib/types';
+import { ErrorBox, Loading } from '@/components/States';
+import styles from '../shared.module.css';
 
-// شکل فرم قطعه
-type PartForm = {
+interface CarModelOption {
+  id: number;
   name: string;
-  description: string;
-  price: string; // در فرم به‌صورت متن نگه می‌داریم
-  stock: string;
-  partNumber: string;
-  carModel: string;
-  imageUrl: string;
-  categoryId: string;
-};
-
-// فرم خالی برای افزودن
-const emptyForm: PartForm = {
-  name: '',
-  description: '',
-  price: '',
-  stock: '',
-  partNumber: '',
-  carModel: '',
-  imageUrl: '',
-  categoryId: '',
-};
-
-function formatPrice(price: number): string {
-  return price.toLocaleString('fa-IR');
+  brandName: string;
 }
 
+interface FormState {
+  name: string;
+  slug: string;
+  description: string;
+  price: string;
+  discountPrice: string;
+  stock: string;
+  partNumber: string;
+  weightGrams: string;
+  unit: string;
+  categoryId: string;
+  brandId: string;
+  isActive: boolean;
+  isFeatured: boolean;
+  metaTitle: string;
+  metaDescription: string;
+  images: { url: string; alt: string }[];
+  compatibility: { carModelId: string; yearsNote: string; engineCode: string }[];
+}
+
+const emptyForm: FormState = {
+  name: '',
+  slug: '',
+  description: '',
+  price: '',
+  discountPrice: '',
+  stock: '0',
+  partNumber: '',
+  weightGrams: '',
+  unit: 'عدد',
+  categoryId: '',
+  brandId: '',
+  isActive: true,
+  isFeatured: false,
+  metaTitle: '',
+  metaDescription: '',
+  images: [],
+  compatibility: [],
+};
+
 export default function AdminPartsPage() {
-  const [parts, setParts] = useState<Part[]>([]);
-  const [categories, setCategories] = useState<Category[]>([]);
-  const [form, setForm] = useState<PartForm>(emptyForm);
-  const [editingId, setEditingId] = useState<number | null>(null);
-  const [msg, setMsg] = useState('');
+  const [list, setList] = useState<PartListItem[] | null>(null);
   const [error, setError] = useState('');
+  const [search, setSearch] = useState('');
+  const [loadingSlow, setLoadingSlow] = useState(false);
+
+  const [tree, setTree] = useState<Category[]>([]);
+  const [brands, setBrands] = useState<Brand[]>([]);
+  const [allModels, setAllModels] = useState<CarModelOption[]>([]);
+
+  const [form, setForm] = useState<FormState>(emptyForm);
+  const [editingId, setEditingId] = useState<number | null>(null);
+  const [formOpen, setFormOpen] = useState(false);
+  const [msg, setMsg] = useState('');
+  const [formError, setFormError] = useState('');
   const [saving, setSaving] = useState(false);
 
-  // گرفتن لیست قطعات و دسته‌ها
-  async function load() {
+  const load = useCallback(async (q: string) => {
+    setLoadingSlow(true);
+    setError('');
     try {
-      const [p, c] = await Promise.all([
-        apiGet<Part[]>('/api/parts'),
-        apiGet<Category[]>('/api/categories'),
-      ]);
-      setParts(p);
-      setCategories(c);
+      const params = new URLSearchParams({ all: '1', limit: '50', sort: 'newest' });
+      if (q) params.set('q', q);
+      const data = await apiGet<{ items: PartListItem[] }>(`/api/parts?${params}`);
+      setList(data.items);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'خطا در دریافت داده‌ها');
+      setError(err instanceof Error ? err.message : 'خطا در دریافت قطعات');
+      setList([]);
+    } finally {
+      setLoadingSlow(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    load('');
+    apiGet<Category[]>('/api/categories/tree?all=1').then(setTree).catch(() => {});
+    apiGet<Brand[]>('/api/brands?withModels=1&all=1').then(setBrands).catch(() => {});
+    apiGet<CarModelOption[]>('/api/brands/car-models/all')
+      .then(setAllModels)
+      .catch(() => {});
+  }, [load]);
+
+  // گزینه‌های دسته به‌صورت مساردار برای select
+  const categoryOptions: { id: number; label: string }[] = [];
+  for (const cat of tree) {
+    categoryOptions.push({ id: cat.id, label: cat.name });
+    for (const child of cat.children ?? []) {
+      categoryOptions.push({ id: child.id, label: `— ${child.name}` });
     }
   }
 
-  useEffect(() => {
-    load();
-  }, []);
-
-  // وقتی روی «ویرایش» کلیک می‌شود، فرم با اطلاعات آن قطعه پر می‌شود
-  function startEdit(part: Part) {
-    setEditingId(part.id);
-    setForm({
-      name: part.name,
-      description: part.description || '',
-      price: String(part.price),
-      stock: String(part.stock),
-      partNumber: part.partNumber || '',
-      carModel: part.carModel || '',
-      imageUrl: part.imageUrl || '',
-      categoryId: part.categoryId ? String(part.categoryId) : '',
-    });
+  function openCreate() {
+    setForm(emptyForm);
+    setEditingId(null);
+    setFormOpen(true);
     setMsg('');
-    setError('');
+    setFormError('');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
-  function resetForm() {
-    setForm(emptyForm);
-    setEditingId(null);
+  async function openEdit(id: number) {
+    setMsg('');
+    setFormError('');
+    try {
+      const part = await apiGet<PartDetail>(`/api/parts/${id}`);
+      setForm({
+        name: part.name,
+        slug: part.slug,
+        description: part.description ?? '',
+        price: String(part.price),
+        discountPrice: part.discountPrice != null ? String(part.discountPrice) : '',
+        stock: String(part.stock),
+        partNumber: part.partNumber ?? '',
+        weightGrams: part.weightGrams != null ? String(part.weightGrams) : '',
+        unit: part.unit,
+        categoryId: part.categoryId ? String(part.categoryId) : '',
+        brandId: part.brandId ? String(part.brandId) : '',
+        isActive: part.isActive,
+        isFeatured: part.isFeatured,
+        metaTitle: part.metaTitle ?? '',
+        metaDescription: part.metaDescription ?? '',
+        images: (part.images ?? []).map((img: ProductImage) => ({
+          url: img.url,
+          alt: img.alt ?? '',
+        })),
+        compatibility: (part.compatibility ?? []).map((c: Compatibility) => ({
+          carModelId: String(c.carModelId ?? ''),
+          yearsNote: c.yearsNote ?? '',
+          engineCode: c.engineCode ?? '',
+        })),
+      });
+      setEditingId(id);
+      setFormOpen(true);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } catch (err) {
+      setFormError(err instanceof Error ? err.message : 'خطا در دریافت قطعه');
+    }
   }
 
-  // ذخیره (افزودن یا ویرایش)
-  async function handleSubmit(e: React.FormEvent) {
+  async function submit(e: React.FormEvent) {
     e.preventDefault();
-    setSaving(true);
+    setFormError('');
     setMsg('');
-    setError('');
 
-    // تبدیل مقادیر فرم به ساختار مورد انتظار بک‌اند
+    const price = Number(form.price);
+    const discount = form.discountPrice ? Number(form.discountPrice) : null;
+    if (!form.name.trim() || form.name.trim().length < 2) {
+      setFormError('نام قطعه را وارد کنید');
+      return;
+    }
+    if (!Number.isFinite(price) || price < 0) {
+      setFormError('قیمت معتبر وارد کنید');
+      return;
+    }
+    if (discount != null && (discount < 0 || discount >= price)) {
+      setFormError('قیمت با تخفیف باید کمتر از قیمت اصلی باشد');
+      return;
+    }
+    if (form.images.some((img) => !img.url.trim())) {
+      setFormError('آدرس تصویر خالی مجاز نیست؛ آن ردیف را حذف کنید');
+      return;
+    }
+    if (form.compatibility.some((c) => !c.carModelId)) {
+      setFormError('مدل خودروی سازگار را برای همه ردیف‌ها انتخاب کنید');
+      return;
+    }
+
     const body = {
-      name: form.name,
-      description: form.description || undefined,
-      price: Number(form.price),
+      name: form.name.trim(),
+      slug: form.slug.trim() || undefined,
+      description: form.description.trim() || null,
+      price,
+      discountPrice: discount,
       stock: Number(form.stock) || 0,
-      partNumber: form.partNumber || undefined,
-      carModel: form.carModel || undefined,
-      imageUrl: form.imageUrl || undefined,
-      categoryId: form.categoryId ? Number(form.categoryId) : undefined,
+      partNumber: form.partNumber.trim() || null,
+      weightGrams: form.weightGrams ? Number(form.weightGrams) : null,
+      unit: form.unit || 'عدد',
+      categoryId: form.categoryId ? Number(form.categoryId) : null,
+      brandId: form.brandId ? Number(form.brandId) : null,
+      isActive: form.isActive,
+      isFeatured: form.isFeatured,
+      metaTitle: form.metaTitle.trim() || null,
+      metaDescription: form.metaDescription.trim() || null,
+      images: form.images.map((img) => ({
+        url: img.url.trim(),
+        alt: img.alt.trim() || null,
+      })),
+      compatibility: form.compatibility.map((c) => ({
+        carModelId: Number(c.carModelId),
+        yearsNote: c.yearsNote.trim() || '',
+        engineCode: c.engineCode.trim() || null,
+      })),
     };
 
+    setSaving(true);
     try {
       if (editingId) {
         await apiPut(`/api/parts/${editingId}`, body);
-        setMsg('قطعه با موفقیت ویرایش شد.');
+        setMsg(`قطعه «${body.name}» به‌روزرسانی شد.`);
       } else {
         await apiPost('/api/parts', body);
-        setMsg('قطعه جدید با موفقیت افزوده شد.');
+        setMsg(`قطعه «${body.name}» ساخته شد.`);
       }
-      resetForm();
-      await load();
+      setFormOpen(false);
+      setForm(emptyForm);
+      setEditingId(null);
+      await load(search);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'خطا در ذخیره قطعه');
+      setFormError(err instanceof Error ? err.message : 'خطا در ذخیره قطعه');
     } finally {
       setSaving(false);
     }
   }
 
-  // حذف قطعه
-  async function handleDelete(id: number) {
-    if (!confirm('آیا از حذف این قطعه مطمئن هستید؟')) return;
+  async function remove(id: number, name: string) {
+    if (!window.confirm(`قطعه «${name}» حذف شود؟`)) return;
     try {
       await apiDelete(`/api/parts/${id}`);
-      await load();
+      setMsg('قطعه حذف شد.');
+      await load(search);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'خطا در حذف قطعه');
     }
   }
 
-  // به‌روزرسانی یک فیلد فرم
-  function setField(key: keyof PartForm, value: string) {
-    setForm((prev) => ({ ...prev, [key]: value }));
-  }
-
   return (
-    <div>
-      <h1 className={s.title}>{editingId ? 'ویرایش قطعه' : 'افزودن قطعه جدید'}</h1>
+    <div className={styles.page}>
+      <div className={styles.head}>
+        <h1 className={styles.title}>مدیریت قطعات</h1>
+        <button type="button" className="btn btn-primary" onClick={openCreate}>
+          ➕ قطعه جدید
+        </button>
+      </div>
 
-      {/* فرم افزودن/ویرایش */}
-      <form onSubmit={handleSubmit} className="card">
-        <div className={s.form}>
-          <div className="field">
-            <label className="label">نام قطعه</label>
-            <input
-              className="input"
-              value={form.name}
-              onChange={(e) => setField('name', e.target.value)}
-              required
-            />
+      {msg && <p className="formSuccess">{msg}</p>}
+      {formError && formOpen === false && <p className="formError">{formError}</p>}
+
+      {/* ---------------- فرم ساخت/ویرایش ---------------- */}
+      {formOpen && (
+        <form className={styles.formCard} onSubmit={submit} noValidate>
+          <h2>{editingId ? `ویرایش قطعه #${editingId}` : 'قطعه جدید'}</h2>
+          {formError && <p className="formError">{formError}</p>}
+
+          <div className={styles.grid3}>
+            <div className="field">
+              <label className="label">نام قطعه *</label>
+              <input
+                className="input"
+                value={form.name}
+                onChange={(e) => setForm({ ...form, name: e.target.value })}
+                required
+              />
+            </div>
+            <div className="field">
+              <label className="label">اسلاگ (اختیاری — خالی=b خودکار)</label>
+              <input
+                className="input"
+                dir="ltr"
+                value={form.slug}
+                onChange={(e) => setForm({ ...form, slug: e.target.value })}
+              />
+            </div>
+            <div className="field">
+              <label className="label">کد فنی</label>
+              <input
+                className="input"
+                dir="ltr"
+                value={form.partNumber}
+                onChange={(e) => setForm({ ...form, partNumber: e.target.value })}
+              />
+            </div>
+
+            <div className="field">
+              <label className="label">قیمت (تومان) *</label>
+              <input
+                className="input"
+                dir="ltr"
+                inputMode="numeric"
+                value={form.price}
+                onChange={(e) => setForm({ ...form, price: e.target.value.replace(/\D/g, '') })}
+                required
+              />
+            </div>
+            <div className="field">
+              <label className="label">قیمت با تخفیف</label>
+              <input
+                className="input"
+                dir="ltr"
+                inputMode="numeric"
+                value={form.discountPrice}
+                onChange={(e) => setForm({ ...form, discountPrice: e.target.value.replace(/\D/g, '') })}
+              />
+            </div>
+            <div className="field">
+              <label className="label">موجودی</label>
+              <input
+                className="input"
+                dir="ltr"
+                inputMode="numeric"
+                value={form.stock}
+                onChange={(e) => setForm({ ...form, stock: e.target.value.replace(/\D/g, '') })}
+              />
+            </div>
+
+            <div className="field">
+              <label className="label">واحد فروش</label>
+              <input
+                className="input"
+                value={form.unit}
+                onChange={(e) => setForm({ ...form, unit: e.target.value })}
+              />
+            </div>
+            <div className="field">
+              <label className="label">وزن (گرم)</label>
+              <input
+                className="input"
+                dir="ltr"
+                inputMode="numeric"
+                value={form.weightGrams}
+                onChange={(e) => setForm({ ...form, weightGrams: e.target.value.replace(/\D/g, '') })}
+              />
+            </div>
+            <div className="field">
+              <label className="label">دسته‌بندی</label>
+              <select
+                className="select"
+                value={form.categoryId}
+                onChange={(e) => setForm({ ...form, categoryId: e.target.value })}
+              >
+                <option value="">بدون دسته</option>
+                {categoryOptions.map((c) => (
+                  <option key={c.id} value={c.id}>{c.label}</option>
+                ))}
+              </select>
+            </div>
+
+            <div className="field">
+              <label className="label">برند</label>
+              <select
+                className="select"
+                value={form.brandId}
+                onChange={(e) => setForm({ ...form, brandId: e.target.value })}
+              >
+                <option value="">بدون برند</option>
+                {brands.map((b) => (
+                  <option key={b.id} value={b.id}>{b.name}</option>
+                ))}
+              </select>
+            </div>
+            <div className="field">
+              <label className="label">عنوان سئو</label>
+              <input
+                className="input"
+                value={form.metaTitle}
+                onChange={(e) => setForm({ ...form, metaTitle: e.target.value })}
+              />
+            </div>
+            <div className="field">
+              <label className="label">توضیح سئو</label>
+              <input
+                className="input"
+                value={form.metaDescription}
+                onChange={(e) => setForm({ ...form, metaDescription: e.target.value })}
+              />
+            </div>
           </div>
 
           <div className="field">
-            <label className="label">کد فنی</label>
-            <input
-              className="input"
-              value={form.partNumber}
-              onChange={(e) => setField('partNumber', e.target.value)}
-              dir="ltr"
-            />
-          </div>
-
-          <div className="field">
-            <label className="label">قیمت (تومان)</label>
-            <input
-              className="input"
-              type="number"
-              value={form.price}
-              onChange={(e) => setField('price', e.target.value)}
-              required
-              dir="ltr"
-            />
-          </div>
-
-          <div className="field">
-            <label className="label">موجودی انبار</label>
-            <input
-              className="input"
-              type="number"
-              value={form.stock}
-              onChange={(e) => setField('stock', e.target.value)}
-              dir="ltr"
-            />
-          </div>
-
-          <div className="field">
-            <label className="label">مدل خودرو</label>
-            <input
-              className="input"
-              value={form.carModel}
-              onChange={(e) => setField('carModel', e.target.value)}
-            />
-          </div>
-
-          <div className="field">
-            <label className="label">دسته‌بندی</label>
-            <select
-              className="select"
-              value={form.categoryId}
-              onChange={(e) => setField('categoryId', e.target.value)}
-            >
-              <option value="">— انتخاب دسته —</option>
-              {categories.map((c) => (
-                <option key={c.id} value={c.id}>
-                  {c.name}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          <div className={`field ${s.formFull}`}>
-            <label className="label">آدرس تصویر (اختیاری)</label>
-            <input
-              className="input"
-              value={form.imageUrl}
-              onChange={(e) => setField('imageUrl', e.target.value)}
-              dir="ltr"
-            />
-          </div>
-
-          <div className={`field ${s.formFull}`}>
             <label className="label">توضیحات</label>
             <textarea
               className="textarea"
-              rows={3}
               value={form.description}
-              onChange={(e) => setField('description', e.target.value)}
+              onChange={(e) => setForm({ ...form, description: e.target.value })}
             />
           </div>
 
-          <div className={s.formActions}>
-            <button type="submit" disabled={saving} className="btn btn-primary">
-              {saving ? 'در حال ذخیره...' : editingId ? 'ذخیره تغییرات' : 'افزودن قطعه'}
-            </button>
-            {editingId && (
-              <button type="button" onClick={resetForm} className="btn btn-secondary">
-                انصراف
-              </button>
-            )}
+          <div className={styles.checkRow}>
+            <label>
+              <input
+                type="checkbox"
+                checked={form.isActive}
+                onChange={(e) => setForm({ ...form, isActive: e.target.checked })}
+              />
+              فعال (قابل نمایش در فروشگاه)
+            </label>
+            <label>
+              <input
+                type="checkbox"
+                checked={form.isFeatured}
+                onChange={(e) => setForm({ ...form, isFeatured: e.target.checked })}
+              />
+              محصول ویژه (نمایش در صفحه اصلی)
+            </label>
           </div>
-        </div>
 
-        {msg && <p style={{ color: 'var(--color-success)' }}>{msg}</p>}
-        {error && <p className="text-danger">{error}</p>}
+          {/* تصاویر */}
+          <fieldset className={styles.subSection}>
+            <legend>تصاویر ({formatNumber(form.images.length)})</legend>
+            {form.images.length === 0 && (
+              <p className={styles.subHint}>
+                تصویری اضافه نشده؛ در فروشگاه جای‌نگهدار نمایش داده می‌شود.
+              </p>
+            )}
+            {form.images.map((img, i) => (
+              <div key={i} className={styles.subRow}>
+                <input
+                  className="input"
+                  dir="ltr"
+                  placeholder="/images/parts/example.svg یا URL کامل"
+                  value={img.url}
+                  onChange={(e) => {
+                    const images = [...form.images];
+                    images[i] = { ...img, url: e.target.value };
+                    setForm({ ...form, images });
+                  }}
+                />
+                <input
+                  className="input"
+                  placeholder="متن جایگزین (alt)"
+                  value={img.alt}
+                  onChange={(e) => {
+                    const images = [...form.images];
+                    images[i] = { ...img, alt: e.target.value };
+                    setForm({ ...form, images });
+                  }}
+                />
+                {img.url && (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={imageUrl(img.url)}
+                    alt=""
+                    className={styles.subPreview}
+                  />
+                )}
+                <button
+                  type="button"
+                  className={styles.subRemove}
+                  onClick={() =>
+                    setForm({ ...form, images: form.images.filter((_, j) => j !== i) })
+                  }
+                  aria-label="حذف تصویر"
+                >
+                  🗑
+                </button>
+              </div>
+            ))}
+            <button
+              type="button"
+              className="btn btn-outline"
+              onClick={() =>
+                setForm({ ...form, images: [...form.images, { url: '', alt: '' }] })
+              }
+            >
+              ➕ افزودن تصویر
+            </button>
+          </fieldset>
+
+          {/* سازگاری */}
+          <fieldset className={styles.subSection}>
+            <legend>خودروهای سازگار ({formatNumber(form.compatibility.length)})</legend>
+            {form.compatibility.map((c, i) => (
+              <div key={i} className={styles.subRow}>
+                <select
+                  className="select"
+                  value={c.carModelId}
+                  onChange={(e) => {
+                    const compatibility = [...form.compatibility];
+                    compatibility[i] = { ...c, carModelId: e.target.value };
+                    setForm({ ...form, compatibility });
+                  }}
+                >
+                  <option value="">انتخاب مدل...</option>
+                  {allModels.map((m) => (
+                    <option key={m.id} value={m.id}>
+                      {m.brandName} {m.name}
+                    </option>
+                  ))}
+                </select>
+                <input
+                  className="input"
+                  placeholder="سال‌های ساخت (مثل ۱۳۹۰-۱۳۹۷)"
+                  value={c.yearsNote}
+                  onChange={(e) => {
+                    const compatibility = [...form.compatibility];
+                    compatibility[i] = { ...c, yearsNote: e.target.value };
+                    setForm({ ...form, compatibility });
+                  }}
+                />
+                <input
+                  className="input"
+                  dir="ltr"
+                  placeholder="کد موتور (اختیاری)"
+                  value={c.engineCode}
+                  onChange={(e) => {
+                    const compatibility = [...form.compatibility];
+                    compatibility[i] = { ...c, engineCode: e.target.value };
+                    setForm({ ...form, compatibility });
+                  }}
+                />
+                <button
+                  type="button"
+                  className={styles.subRemove}
+                  onClick={() =>
+                    setForm({
+                      ...form,
+                      compatibility: form.compatibility.filter((_, j) => j !== i),
+                    })
+                  }
+                  aria-label="حذف سازگاری"
+                >
+                  🗑
+                </button>
+              </div>
+            ))}
+            <button
+              type="button"
+              className="btn btn-outline"
+              onClick={() =>
+                setForm({
+                  ...form,
+                  compatibility: [
+                    ...form.compatibility,
+                    { carModelId: '', yearsNote: '', engineCode: '' },
+                  ],
+                })
+              }
+            >
+              ➕ افزودن خودرو
+            </button>
+          </fieldset>
+
+          <div className={styles.formActions}>
+            <button type="submit" className="btn btn-primary" disabled={saving}>
+              {saving ? 'در حال ذخیره...' : editingId ? 'ذخیره تغییرات' : 'ساخت قطعه'}
+            </button>
+            <button
+              type="button"
+              className="btn btn-outline"
+              onClick={() => {
+                setFormOpen(false);
+                setEditingId(null);
+                setForm(emptyForm);
+              }}
+            >
+              انصراف
+            </button>
+          </div>
+        </form>
+      )}
+
+      {/* ---------------- جست‌وجو ---------------- */}
+      <form
+        className={styles.searchBar}
+        onSubmit={(e) => {
+          e.preventDefault();
+          load(search);
+        }}
+      >
+        <input
+          className="input"
+          placeholder="جست‌وجو بر اساس نام یا کد فنی..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+        />
+        <button type="submit" className="btn btn-secondary">جست‌وجو</button>
       </form>
 
-      {/* جدول قطعات */}
-      <h2 className={s.title} style={{ marginTop: '2rem' }}>
-        لیست قطعات ({parts.length.toLocaleString('fa-IR')})
-      </h2>
-      <div className={s.tableWrap}>
-        <table className={s.table}>
-          <thead>
-            <tr>
-              <th>نام</th>
-              <th>مدل خودرو</th>
-              <th>قیمت</th>
-              <th>موجودی</th>
-              <th>دسته</th>
-              <th>عملیات</th>
-            </tr>
-          </thead>
-          <tbody>
-            {parts.map((part) => (
-              <tr key={part.id}>
-                <td>{part.name}</td>
-                <td>{part.carModel || '—'}</td>
-                <td>{formatPrice(part.price)}</td>
-                <td>{part.stock.toLocaleString('fa-IR')}</td>
-                <td>{part.categoryName || '—'}</td>
-                <td>
-                  <div className={s.actions}>
-                    <button
-                      className={`${s.btnSm} ${s.editBtn}`}
-                      onClick={() => startEdit(part)}
-                    >
-                      ویرایش
-                    </button>
-                    <button
-                      className={`${s.btnSm} ${s.delBtn}`}
-                      onClick={() => handleDelete(part.id)}
-                    >
-                      حذف
-                    </button>
-                  </div>
-                </td>
+      {/* ---------------- فهرست ---------------- */}
+      {list === null || loadingSlow ? (
+        <Loading />
+      ) : error ? (
+        <ErrorBox message={error} onRetry={() => load(search)} />
+      ) : (
+        <div className="tableWrap">
+          <table className="table">
+            <thead>
+              <tr>
+                <th>نام</th>
+                <th>دسته</th>
+                <th>برند</th>
+                <th>قیمت</th>
+                <th>موجودی</th>
+                <th>وضعیت</th>
+                <th>عملیات</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+            </thead>
+            <tbody>
+              {list.length === 0 && (
+                <tr>
+                  <td colSpan={7} className={styles.emptyCell}>
+                    قطعه‌ای یافت نشد.
+                  </td>
+                </tr>
+              )}
+              {list.map((p) => (
+                <tr key={p.id}>
+                  <td>
+                    <Link href={`/products/${p.slug}`} className={styles.nameLink}>
+                      {p.name}
+                    </Link>
+                    {p.partNumber && (
+                      <small className={styles.subText} dir="ltr"> {p.partNumber}</small>
+                    )}
+                  </td>
+                  <td>{p.categoryName ?? '—'}</td>
+                  <td>{p.brandName ?? '—'}</td>
+                  <td>
+                    {p.discountPrice != null ? (
+                      <>
+                        <del className={styles.subText}>{formatPrice(p.price)}</del>{' '}
+                        <strong>{formatPrice(p.discountPrice)}</strong>
+                      </>
+                    ) : (
+                      formatPrice(p.price)
+                    )}
+                  </td>
+                  <td className={p.stock === 0 ? 'text-danger' : ''}>
+                    {formatNumber(p.stock)}
+                  </td>
+                  <td>
+                    <span className={`badge ${p.isActive ? 'badge-delivered' : 'badge-cancelled'}`}>
+                      {p.isActive ? 'فعال' : 'غیرفعال'}
+                    </span>
+                    {p.isFeatured && (
+                      <span className="badge badge-confirmed" style={{ marginRight: 4 }}>
+                        ویژه
+                      </span>
+                    )}
+                  </td>
+                  <td>
+                    <div className={styles.rowActions}>
+                      <button
+                        type="button"
+                        className={styles.editBtn}
+                        onClick={() => openEdit(p.id)}
+                      >
+                        ویرایش
+                      </button>
+                      <button
+                        type="button"
+                        className={styles.deleteBtn}
+                        onClick={() => remove(p.id, p.name)}
+                      >
+                        حذف
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
     </div>
   );
 }

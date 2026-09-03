@@ -1,0 +1,452 @@
+/* صفحه جزئیات محصول */
+
+.page {
+  padding-bottom: 2rem;
+}
+
+.detail {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* ---------------- گالری + اطلاعات ---------------- */
+
+.top {
+  display: grid;
+  grid-template-columns: minmax(0, 420px) 1fr;
+  gap: 24px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: 20px;
+}
+
+.gallery {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.mainImage {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: linear-gradient(135deg, #f1f5f9, #e2e8f0);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mainImage img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.placeholder {
+  font-size: 4.5rem;
+  opacity: 0.5;
+}
+
+.discountBadge {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: var(--color-danger);
+  color: #fff;
+  font-size: 0.85rem;
+  font-weight: 700;
+  padding: 4px 12px;
+  border-radius: 999px;
+}
+
+.thumbs {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+}
+
+.thumb {
+  flex-shrink: 0;
+  width: 72px;
+  height: 54px;
+  border: 2px solid var(--color-border);
+  border-radius: 8px;
+  overflow: hidden;
+  padding: 0;
+  background: none;
+  cursor: pointer;
+}
+
+.thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.thumbActive {
+  border-color: var(--color-accent);
+}
+
+/* ---------------- اطلاعات ---------------- */
+
+.info {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-width: 0;
+}
+
+.categoryChip {
+  align-self: flex-start;
+  padding: 3px 12px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--color-accent) 8%, white);
+  color: var(--color-accent);
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.name {
+  font-size: 1.35rem;
+  color: var(--color-primary);
+  line-height: 1.6;
+}
+
+.metaRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  font-size: 0.88rem;
+}
+
+.metaLabel {
+  color: var(--color-muted);
+}
+
+.ratingBox {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.ratingText {
+  color: var(--color-muted);
+  font-size: 0.84rem;
+}
+
+.partNumber {
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.brandLink {
+  color: var(--color-accent);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.brandLink:hover {
+  text-decoration: underline;
+}
+
+.priceBox {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 14px 16px;
+  border-radius: var(--radius);
+  background: var(--color-bg);
+}
+
+.oldPrice {
+  color: var(--color-muted);
+  font-size: 0.88rem;
+}
+
+.priceRow {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.price {
+  font-size: 1.45rem;
+  font-weight: 800;
+  color: var(--color-primary);
+}
+
+.stockOk {
+  color: var(--color-success);
+  font-size: 0.84rem;
+  font-weight: 600;
+}
+
+.stockOut {
+  color: var(--color-danger);
+  font-size: 0.84rem;
+  font-weight: 600;
+}
+
+/* ---------------- خرید ---------------- */
+
+.buyRow {
+  display: flex;
+  align-items: stretch;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.quantityBox {
+  display: flex;
+  align-items: center;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  overflow: hidden;
+  background: var(--color-surface);
+}
+
+.quantityBox button {
+  width: 38px;
+  align-self: stretch;
+  border: none;
+  background: var(--color-bg);
+  font-size: 1.1rem;
+  cursor: pointer;
+  color: var(--color-text);
+}
+
+.quantityBox button:hover {
+  background: var(--color-border);
+}
+
+.quantityBox span {
+  min-width: 44px;
+  text-align: center;
+  font-weight: 700;
+}
+
+.addBtn {
+  flex: 1;
+  min-width: 180px;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 8px;
+  background: var(--color-accent);
+  color: #fff;
+  font-family: inherit;
+  font-size: 0.95rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.addBtn:hover {
+  background: var(--color-accent-hover);
+}
+
+.added {
+  background: var(--color-success) !important;
+}
+
+.wishBtn {
+  width: 48px;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  background: var(--color-surface);
+  font-size: 1.25rem;
+  cursor: pointer;
+  transition: border-color 0.15s ease;
+}
+
+.wishBtn:hover {
+  border-color: var(--color-danger);
+}
+
+.wishActive {
+  border-color: var(--color-danger);
+  background: color-mix(in srgb, var(--color-danger) 6%, white);
+}
+
+.perks {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 4px;
+  font-size: 0.84rem;
+  color: var(--color-muted);
+}
+
+/* ---------------- تب‌ها ---------------- */
+
+.tabs {
+  display: flex;
+  gap: 4px;
+  border-bottom: 2px solid var(--color-border);
+  overflow-x: auto;
+}
+
+.tabs button {
+  padding: 11px 18px;
+  border: none;
+  background: none;
+  color: var(--color-muted);
+  font-family: inherit;
+  font-size: 0.92rem;
+  cursor: pointer;
+  white-space: nowrap;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -2px;
+  transition: color 0.15s ease, border-color 0.15s ease;
+}
+
+.tabs button:hover {
+  color: var(--color-text);
+}
+
+.tabActive {
+  color: var(--color-accent) !important;
+  border-bottom-color: var(--color-accent) !important;
+  font-weight: 700;
+}
+
+.tabContent {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-top: none;
+  border-radius: 0 0 var(--radius) var(--radius);
+  padding: 20px;
+  min-height: 120px;
+}
+
+.desc p {
+  line-height: 2;
+}
+
+.specTable {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+  max-width: 560px;
+}
+
+.specTable th,
+.specTable td {
+  padding: 10px 14px;
+  text-align: right;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.specTable th {
+  color: var(--color-muted);
+  font-weight: 600;
+  width: 140px;
+}
+
+.specTable tr:last-child th,
+.specTable tr:last-child td {
+  border-bottom: none;
+}
+
+/* ---------------- سازگاری ---------------- */
+
+.compatGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+  gap: 10px;
+}
+
+.compatCard {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 12px 14px;
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+  font-size: 0.88rem;
+}
+
+.compatCard small {
+  color: var(--color-muted);
+  font-size: 0.76rem;
+}
+
+/* ---------------- نظرات ---------------- */
+
+.reviews {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.reviewForm {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px;
+  border: 1px dashed var(--color-border);
+  border-radius: var(--radius);
+}
+
+.reviewForm h3 {
+  font-size: 1rem;
+  color: var(--color-primary);
+}
+
+.ratingPicker {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.loginHint a {
+  color: var(--color-accent);
+  font-weight: 600;
+}
+
+.reviewList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.reviewItem {
+  padding: 14px 16px;
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+}
+
+.reviewItem header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 6px;
+}
+
+.reviewItem p {
+  font-size: 0.9rem;
+  line-height: 1.9;
+}
+
+/* ---------------- واکنش‌گرا ---------------- */
+
+@media (max-width: 780px) {
+  .top {
+    grid-template-columns: 1fr;
+  }
+
+  .name {
+    font-size: 1.15rem;
+  }
+
+  .addBtn {
+    min-width: 140px;
+  }
+}
