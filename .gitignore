@@ -17,7 +17,7 @@ frontend/!.yarn/patches
 frontend/!.yarn/plugins
 frontend/!.yarn/releases
 frontend/!.yarn/versions
-
+frontend/.env.local
 frontend/coverage
 
 frontend/.next/
@@ -33,7 +33,6 @@ frontend/yarn-debug.log*
 frontend/yarn-error.log*
 frontend/.pnpm-debug.log*
 
-frontend/.env*
 
 frontend/.vercel
 
