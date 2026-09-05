@@ -9,12 +9,12 @@
 
 import { useEffect, useState } from 'react';
 import { apiGet } from '@/lib/api';
-import type { Part } from '@/lib/types';
+import type { Paginated, PartListItem } from '@/lib/types';
 import PartCard from '@/components/PartCard';
 import styles from './page.module.css';
 
 export default function PartsPage() {
-  const [parts, setParts] = useState<Part[]>([]);
+  const [parts, setParts] = useState<PartListItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
   const [error, setError] = useState('');
@@ -24,9 +24,12 @@ export default function PartsPage() {
     setLoading(true);
     setError('');
     try {
-      const query = q ? `?q=${encodeURIComponent(q)}` : '';
-      const data = await apiGet<Part[]>(`/api/parts${query}`);
-      setParts(data);
+      const query = q ? `&q=${encodeURIComponent(q)}` : '';
+      // پاسخ API صفحه‌بندی شده است: { items, total, page, ... }
+      const data = await apiGet<Paginated<PartListItem>>(
+        `/api/parts?limit=50${query}`,
+      );
+      setParts(data.items);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'خطا در دریافت قطعات');
     } finally {

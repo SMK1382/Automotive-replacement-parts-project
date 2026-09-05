@@ -11,7 +11,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { apiGet, apiPost } from '@/lib/api';
 import { useAuth } from '@/context/AuthContext';
-import type { Part } from '@/lib/types';
+import type { PartDetail } from '@/lib/types';
 import styles from './page.module.css';
 
 // قالب‌بندی قیمت فارسی
@@ -20,7 +20,7 @@ function formatPrice(price: number): string {
 }
 
 export default function PartDetailClient({ id }: { id: string }) {
-  const [part, setPart] = useState<Part | null>(null);
+  const [part, setPart] = useState<PartDetail | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [ordering, setOrdering] = useState(false);
@@ -31,7 +31,7 @@ export default function PartDetailClient({ id }: { id: string }) {
 
   // گرفتن اطلاعات قطعه
   useEffect(() => {
-    apiGet<Part>(`/api/parts/${id}`)
+    apiGet<PartDetail>(`/api/parts/${id}`)
       .then((data) => setPart(data))
       .catch((err) =>
         setError(err instanceof Error ? err.message : 'قطعه پیدا نشد'),
@@ -67,14 +67,19 @@ export default function PartDetailClient({ id }: { id: string }) {
   if (error && !part) return <p className="text-danger">{error}</p>;
   if (!part) return <p className="muted">قطعه پیدا نشد.</p>;
 
+  // اولین تصویر قطعه (اندپوینت جزئیات، آرایه images برمی‌گرداند)
+  const mainImage = part.images[0]?.url ?? null;
+  // نام مدل‌های سازگار از جدول compatibility
+  const compatibleModels = part.compatibility.map((c) => c.modelName);
+
   return (
     <div className={styles.page}>
       <div className={styles.layout}>
         {/* تصویر */}
         <div className={styles.imageBox}>
-          {part.imageUrl ? (
+          {mainImage ? (
             // eslint-disable-next-line @next/next/no-img-element
-            <img src={part.imageUrl} alt={part.name} className={styles.image} />
+            <img src={mainImage} alt={part.name} className={styles.image} />
           ) : (
             <div className={styles.placeholder}>⚙️</div>
           )}
@@ -86,8 +91,10 @@ export default function PartDetailClient({ id }: { id: string }) {
             <span className={styles.category}>{part.categoryName}</span>
           )}
           <h1 className={styles.name}>{part.name}</h1>
-          {part.carModel && (
-            <p className={styles.model}>🚗 مدل خودرو: {part.carModel}</p>
+          {compatibleModels.length > 0 && (
+            <p className={styles.model}>
+              🚗 مناسب برای: {compatibleModels.join('، ')}
+            </p>
           )}
           {part.partNumber && (
             <p className="muted">کد فنی: {part.partNumber}</p>

@@ -7,7 +7,7 @@
 // ===================================================================
 
 import Link from 'next/link';
-import type { Part } from '@/lib/types';
+import type { PartListItem } from '@/lib/types';
 import styles from './PartCard.module.css';
 
 // قالب‌بندی عدد به‌صورت فارسی با جداکننده هزارگان (تومان)
@@ -15,7 +15,7 @@ function formatPrice(price: number): string {
   return price.toLocaleString('fa-IR');
 }
 
-export default function PartCard({ part }: { part: Part }) {
+export default function PartCard({ part }: { part: PartListItem }) {
   return (
     <Link href={`/parts/${part.id}`} className={styles.card}>
       <div className={styles.top}>
@@ -33,8 +33,8 @@ export default function PartCard({ part }: { part: Part }) {
           <span className={styles.category}>{part.categoryName}</span>
         )}
         <h3 className={styles.name}>{part.name}</h3>
-        {part.carModel && (
-          <p className={styles.model}>🚗 {part.carModel}</p>
+        {part.brandName && (
+          <p className={styles.model}>🚗 {part.brandName}</p>
         )}
         <div className={styles.footer}>
           <span className={styles.price}>{formatPrice(part.price)} تومان</span>

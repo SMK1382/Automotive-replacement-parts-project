@@ -49,7 +49,9 @@ export default function Navbar() {
                   پنل کاربر
                 </Link>
               )}
-              <span className={styles.userName}>{user.name}</span>
+              <span className={styles.userName}>
+                {user.firstName} {user.lastName}
+              </span>
               <button onClick={logout} className="btn btn-secondary">
                 خروج
               </button>
