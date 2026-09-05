@@ -32,13 +32,29 @@ async function main() {
   console.log('🌱 شروع پر کردن دیتابیس...');
 
   // ۰) خالی کردن جداول (ترتیب برای رعایت کلیدهای خارجی)
-  await db.execute(sql`
-    TRUNCATE TABLE
-      order_items, orders, part_compatibility, product_images, parts,
-      reviews, wishlist, addresses, categories, car_models, brands,
-      coupons, banners, articles, contact_messages, users
-    RESTART IDENTITY CASCADE
-  `);
+  // اگر جداول هنوز ساخته نشده‌اند، پیام راهنما نمایش داده می‌شود
+  // (دستور npm run seed خودش ابتدا drizzle-kit push را اجرا می‌کند)
+  try {
+    await db.execute(sql`
+      TRUNCATE TABLE
+        order_items, orders, part_compatibility, product_images, parts,
+        reviews, wishlist, addresses, categories, car_models, brands,
+        coupons, banners, articles, contact_messages, users
+      RESTART IDENTITY CASCADE
+    `);
+  } catch (err) {
+    const message = err instanceof Error ? err.message : String(err);
+    if (message.includes('does not exist') || message.includes('وجود ندارد')) {
+      console.error(
+        '❌ جداول دیتابیس هنوز ساخته نشده‌اند.\n' +
+          '   راه‌حل: دستور «npm run seed» را اجرا کنید (خودش ابتدا اسکیما را می‌سازد)\n' +
+          '   یا ابتدا «npm run db:push» و بعد این اسکریپت را اجرا کنید.',
+      );
+    } else {
+      console.error('❌ خطا در پاک‌سازی جداول:', message);
+    }
+    process.exit(1);
+  }
 
   // ۱) کاربران: ادمین + کاربر نمونه
   const [admin, , demoUser] = await db
